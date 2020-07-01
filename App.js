@@ -5,6 +5,8 @@ import LoginScreen from './src/screens/Login';
 import RegisterScreen from './src/screens/Register'
 import Dashboard from './src/screens/Dashboard'
 import Details from './src/screens/Details'
+import Profile from './src/screens/Profile'
+import History from './src/screens/HistoryTransactions'
 
 export default class App extends Component {
   render() {
@@ -13,7 +15,9 @@ export default class App extends Component {
         {/* <LoginScreen /> */}
         {/* <RegisterScreen /> */}
         {/* <Dashboard /> */}
-        <Details />
+        {/* <Details /> */}
+        <Profile />
+        {/* <History /> */}
       </>
     );
   }
