@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
   Text,
   TextInput,
@@ -11,13 +12,13 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-const deviceWidth = Dimensions.get('window').width;
-const deviceHeight = Dimensions.get('window').height;
-
 import bg from '../assets/image/bg.jpg';
 import librarylogo from '../assets/image/librarylogo.png'
 import email from '../assets/image/email.png'
 import pass from '../assets/image/pass.png'
+
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 
 export default class Login extends Component {
   render() {
@@ -46,7 +47,7 @@ export default class Login extends Component {
           </View>
           <View style={loginStyle.link}>
             <TouchableOpacity
-              onPress={() => Alert.alert('Logging In...')}
+              onPress={this.props.login}
               style={loginStyle.submit}>
               <Text style={loginStyle.submitText}>Login</Text>
             </TouchableOpacity>
@@ -71,7 +72,7 @@ const loginStyle = StyleSheet.create({
   accent1: {
     position: 'absolute',
     width: deviceWidth,
-    height: deviceHeight,
+    height: 800,
     zIndex: 0,
   },
   accentOverlay: {

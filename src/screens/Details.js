@@ -53,6 +53,10 @@ export default class Details extends Component {
 const accentHeight = 250
 
 const detailStyle = StyleSheet.create({
+  parent: {
+    flex: 1,
+    position: 'relative',
+  },
   accent1: {
     position: 'absolute',
     width: deviceWidth,

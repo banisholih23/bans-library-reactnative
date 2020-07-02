@@ -8,15 +8,31 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
+  Button,
+  ScroolView,
   KeyboardAvoidingView,
 } from 'react-native';
 
 import bg from '../assets/image/bg.jpg';
+import Catalog from './Catalog'
+import Catalog2 from './Catalog2'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export default class Dashboard extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      data: [
+        {image: require('../assets/image/koala.jpg'), key: 1},
+        {image: require('../assets/image/jensudriman.jpg'), key: 2},
+        {image: require('../assets/image/sangpemimpi.jpg'), key: 3},
+        {image: require('../assets/image/filo.jpg'), key: 4},
+      ],
+    };
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'position'} style={dashboardStyle.parent} >
@@ -28,6 +44,13 @@ export default class Dashboard extends Component {
             <Text style={dashboardStyle.text3}>Bani Sholih</Text>
           </View>
         </View>
+        <View style={dashboardStyle.button}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('logout')}
+            style={dashboardStyle.buttonContainer}>
+            <Text style={dashboardStyle.textTouch}>Logout</Text>
+          </TouchableOpacity>
+        </View>
         <View style={dashboardStyle.form}>
           <View style={dashboardStyle.formInput}>
             <TextInput placeholder="Search" style={dashboardStyle.inputStyle} />
@@ -36,6 +59,19 @@ export default class Dashboard extends Component {
         <View>
           <Text style={dashboardStyle.textBook}>List Books</Text>
         </View>
+        <View style={dashboardStyle.button2}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('detail')}
+            style={dashboardStyle.buttonContainer}>
+            <Text style={dashboardStyle.textTouch}>Details</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={dashboardStyle.scrollView}>  
+          <Catalog data={this.state.data} dashboardStyle={dashboardStyle} />
+        </View>
+        {/* <View style={dashboardStyle.scrollView2}>  
+          <Catalog2 data={this.state.data} dashboardStyle={dashboardStyle} />
+        </View> */}
       </KeyboardAvoidingView>
     )
   }
@@ -46,6 +82,18 @@ const dashboardStyle = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    backgroundColor: 'white',
+    elevation: 5,
+  },
+  containerImage: {},
   accent1: {
     position: 'absolute',
     width: deviceWidth,
@@ -86,7 +134,7 @@ const dashboardStyle = StyleSheet.create({
   inputStyle: {
     marginTop: 220,
     marginLeft: 20,
-    width: 340,
+    width: 350,
     height: 50,
     paddingHorizontal: 20,
     borderRadius: 30,
@@ -97,6 +145,22 @@ const dashboardStyle = StyleSheet.create({
     position: 'absolute',
     zIndex: 4,
     justifyContent: 'flex-end',
+  },
+  button: {
+    position: 'absolute',
+    zIndex: 5,
+    marginTop: -50,
+    marginLeft: 290,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button2: {
+    position: 'absolute',
+    zIndex: 5,
+    marginTop: 470,
+    marginLeft: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   formInput: {
     position: 'relative',
@@ -118,5 +182,56 @@ const dashboardStyle = StyleSheet.create({
     marginLeft: 30,
     bottom: -300,
     fontSize: 25,
-  }
+  },
+  logout: {
+    bottom: 50,
+    alignItems: 'flex-end',
+  },
+  styleSubmit: {
+    position: 'absolute',
+    height: 30,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#A10201',
+    borderRadius: 10,
+  },
+  submitLogout: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  buttonContainer: {
+    marginTop: 70,
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 80,
+    borderRadius: 20,
+    backgroundColor: "#723621",
+    elevation: 5,
+  },
+  textTouch: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  scrollView: {
+    position: 'absolute',
+    zIndex: 5,
+    marginTop: 300,
+    marginLeft: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollView2: {
+    position: 'absolute',
+    zIndex: 5,
+    marginTop: 600,
+    marginLeft: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })

@@ -38,7 +38,9 @@ export default class Details extends Component {
                 <Image source={email} style={styles.imagePass} />
               </View>
             </View>
-            <TouchableOpacity style={styles.buttonContainer}>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.navigate('home')}
+              style={styles.buttonContainer}>
               <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
           </View>
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   buttonContainer: {
-    marginTop: 100,
+    marginTop: 70,
     height: 45,
     flexDirection: 'row',
     justifyContent: 'center',
