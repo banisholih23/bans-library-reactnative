@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Button,
-  ScroolView,
+  ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
 
@@ -21,16 +21,20 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export default class Dashboard extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       data: [
-        {image: require('../assets/image/koala.jpg'), key: 1},
-        {image: require('../assets/image/jensudriman.jpg'), key: 2},
-        {image: require('../assets/image/sangpemimpi.jpg'), key: 3},
-        {image: require('../assets/image/filo.jpg'), key: 4},
+        { image: require('../assets/image/koala.jpg') },
+        { image: require('../assets/image/jensudriman.jpg') },
+        { image: require('../assets/image/sangpemimpi.jpg') },
+        { image: require('../assets/image/filo.jpg') },
       ],
     };
+  }
+
+  logout = () => {
+    this.props.navigation.navigate('login')
   }
 
   render() {
@@ -46,7 +50,7 @@ export default class Dashboard extends Component {
         </View>
         <View style={dashboardStyle.button}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('logout')}
+            onPress={this.logout}
             style={dashboardStyle.buttonContainer}>
             <Text style={dashboardStyle.textTouch}>Logout</Text>
           </TouchableOpacity>
@@ -66,12 +70,22 @@ export default class Dashboard extends Component {
             <Text style={dashboardStyle.textTouch}>Details</Text>
           </TouchableOpacity>
         </View>
-        <View style={dashboardStyle.scrollView}>  
-          <Catalog data={this.state.data} dashboardStyle={dashboardStyle} />
-        </View>
-        {/* <View style={dashboardStyle.scrollView2}>  
-          <Catalog2 data={this.state.data} dashboardStyle={dashboardStyle} />
-        </View> */}
+        <ScrollView style={dashboardStyle.marginScroll}>
+          <View style={dashboardStyle.scrollView}>
+            <Catalog data={this.state.data} dashboardStyle={dashboardStyle} />
+          </View>
+          <View style={dashboardStyle.listbook}>
+            <Text style={dashboardStyle.textScroll}>
+              Losasasasrem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+              minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+              aliquip ex ea commodo consequat. Duis aute irure dolor in
+              reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+              pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+              culpa qui officia deserunt mollit anim id est laborum.
+            </Text>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }
@@ -81,6 +95,17 @@ const dashboardStyle = StyleSheet.create({
   parent: {
     flex: 1,
     position: 'relative',
+  },
+  textScroll: {
+    color: 'white',
+    fontSize: 42,
+  },
+  marginScroll: {
+    marginTop: 300,
+  },
+  listbook: {
+    marginLeft: 25,
+    marginTop: 190,
   },
   shadow: {
     shadowColor: '#000',
@@ -221,10 +246,14 @@ const dashboardStyle = StyleSheet.create({
   scrollView: {
     position: 'absolute',
     zIndex: 5,
-    marginTop: 300,
+    marginTop: -40,
     marginLeft: 25,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollView3: {
+    // zIndex: 6,
+    marginTop: 500,
   },
   scrollView2: {
     position: 'absolute',

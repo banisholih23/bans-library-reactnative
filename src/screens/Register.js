@@ -21,6 +21,14 @@ import email from '../assets/image/email.png'
 import pass from '../assets/image/pass.png'
 
 export default class Login extends Component {
+  constructor(props){
+    super(props)
+  }
+
+  login = () => {
+    this.props.navigation.navigate('login')
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'position'} style={loginStyle.parent}>
@@ -55,7 +63,11 @@ export default class Login extends Component {
             </TouchableOpacity>
           </View>
           <View style={loginStyle.container2}>
-            <Text style={loginStyle.textRegister}>Already Have Account? Please Login</Text>
+            <TouchableOpacity
+              onPress={this.login}
+              style={loginStyle.submitRegist}>
+              <Text style={loginStyle.textRegister}>Already Have Account ? Please Login</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -73,7 +85,7 @@ const loginStyle = StyleSheet.create({
   accent1: {
     position: 'absolute',
     width: deviceWidth,
-    height: deviceHeight,
+    height: 800,
     zIndex: 0,
   },
   accentOverlay: {
@@ -193,7 +205,6 @@ const loginStyle = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     backgroundColor: 'transparent',
-    bottom: -115,
     fontSize: 15,
   },
   inputStyle: {
@@ -210,5 +221,14 @@ const loginStyle = StyleSheet.create({
     justifyContent: 'center',
     color: '#fff',
     fontSize: 20,
+  },
+  submitRegist: {
+    position: 'absolute',
+    bottom: -150,
+    right: 70,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    borderRadius: 7,
   },
 });

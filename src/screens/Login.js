@@ -21,6 +21,16 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 export default class Login extends Component {
+  constructor(props) {
+    super(props)
+  }
+  login = () => {
+    this.props.navigation.navigate('usermenu')
+  }
+  register = () => {
+    this.props.navigation.navigate('register')
+  }
+
   render() {
     return (
       <KeyboardAvoidingView behavior={'position'} style={loginStyle.parent}>
@@ -34,10 +44,10 @@ export default class Login extends Component {
         </View>
         <View style={loginStyle.form}>
           <View style={loginStyle.formCard}>
-            <View> 
+            <View>
               <Image source={email} style={loginStyle.imageUser} />
               <TextInput placeholder="Email" style={loginStyle.inputStyle} />
-              <Image source={pass} style={loginStyle.imagePass} /> 
+              <Image source={pass} style={loginStyle.imagePass} />
               <TextInput
                 secureTextEntry={true}
                 placeholder="Password"
@@ -47,14 +57,18 @@ export default class Login extends Component {
           </View>
           <View style={loginStyle.link}>
             <TouchableOpacity
-              onPress={this.props.login}
+              onPress={this.login}
               style={loginStyle.submit}>
               <Text style={loginStyle.submitText}>Login</Text>
             </TouchableOpacity>
             <Text style={loginStyle.forgotPassword}>Forgot Password?</Text>
           </View>
           <View style={loginStyle.container2}>
-            <Text style={loginStyle.textRegister}>Don't Have Account? Please Register</Text>
+            <TouchableOpacity
+              onPress={this.register}
+              style={loginStyle.submitRegist}>
+              <Text style={loginStyle.textRegister}>Don't Have Account ? Please Register</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -94,6 +108,7 @@ const loginStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   container2: {
+    alignItems: 'baseline',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -175,6 +190,15 @@ const loginStyle = StyleSheet.create({
     backgroundColor: '#F69470',
     borderRadius: 7,
   },
+  submitRegist: {
+    position: 'absolute',
+    bottom: -100,
+    right: 70,
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    borderRadius: 7,
+  },
   submitText: {
     fontSize: 17,
     textTransform: 'uppercase',
@@ -185,7 +209,6 @@ const loginStyle = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     backgroundColor: 'transparent',
-    bottom: -70,
     fontSize: 15,
   },
   inputStyle: {
