@@ -1,123 +1,84 @@
-import React, {Component} from 'react';
-import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
+import { connect } from 'react-redux'
+
+import { getAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 import bg from '../assets/image/bg.jpg';
 
-export default class Genre extends Component {
+class Author extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoading: true,
+      dataAuthor: [],
+      currentPage: 1,
+      refreshing: false,
+    }
+  }
+
+  fetchData = () => {
+    this.props.getAuthor();
+    const { dataAuthor, isLoading } = this.props.author;
+    this.setState({ dataAuthor, isLoading });
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.fetchData(this.state.currentPage).then(() => {
+      this.setState({refreshing: false});
+    });
+  };
+
+  componentDidMount() {
+    this.fetchData()
+  }
+
+  _renderItem({ item }) {
+    return (
+      <>
+        <View style={style.transactionsList}>
+          <TouchableOpacity >
+            <Text style={style.bookTitle}>{item.name}</Text>
+            {/* <Text style={style.bookTitle}>{item.description}</Text> */}
+          </TouchableOpacity>
+          <View style={style.badgeWrapper}>
+            <TouchableOpacity style={style.badgeWarning}>
+              <Text style={style.badgeText}>edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={style.badgeDanger}>
+              <Text style={style.badgeText}>delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={style.line} />
+      </>
+    )
+  }
+
   render() {
+    const { dataAuthor, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
           <Text style={style.transactions}>Author</Text>
           <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search Genre ...' 
-            placeholderTextColor='black'/>
+            <TextInput style={style.searchInput} placeholder='Search Genre ...'
+              placeholderTextColor='black' />
           </View>
         </View>
-        <ScrollView style={style.content}>
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Actions</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Romance</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-        </ScrollView>
+        <FlatList
+          style={style.content}
+          data={dataAuthor}
+          renderItem={this._renderItem}
+          keyExtractor={(item) => item.id}
+          onRefresh={() => this.fetchData()}
+          refreshing={isLoading}
+        />
         <View style={style.addBtnWrapper}>
           <TouchableOpacity style={style.addBtn}>
             <Text style={style.addBtntext}>ADD GENRE</Text>
@@ -127,6 +88,13 @@ export default class Genre extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  author: state.author
+})
+const mapDispatchToProps = {getAuthor}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Author)
 
 const style = StyleSheet.create({
   parent: {
@@ -139,7 +107,7 @@ const style = StyleSheet.create({
     height: 800
   },
   header: {
-    width: deviceWidth-100,
+    width: deviceWidth - 100,
     height: 150,
     alignSelf: 'center',
     marginTop: 20
@@ -188,13 +156,13 @@ const style = StyleSheet.create({
     textTransform: 'uppercase'
   },
   search: {
-    marginTop:10,
+    marginTop: 10,
     alignItems: 'center',
   },
   searchInput: {
     backgroundColor: 'white',
     height: 35,
-    width: deviceWidth-120,
+    width: deviceWidth - 120,
     fontSize: 10,
     borderRadius: 10,
     paddingLeft: 30,
@@ -219,7 +187,7 @@ const style = StyleSheet.create({
   },
   bookTitle: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold'
   },
   addBtnWrapper: {
@@ -245,7 +213,7 @@ const style = StyleSheet.create({
     letterSpacing: 3
   },
   line: {
-    width: deviceWidth-30,
+    width: deviceWidth - 30,
     alignSelf: 'center',
     height: 1,
     width: 300,

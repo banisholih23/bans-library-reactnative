@@ -11,7 +11,16 @@ import {
   Button,
   ScrollView,
   KeyboardAvoidingView,
+  FlatList,
+  BackHandler,
 } from 'react-native';
+
+import Carousel from 'react-native-snap-carousel';
+
+import { Card, CardItem, Body } from 'native-base'
+import { connect } from 'react-redux'
+
+import { getBook } from '../redux/actions/book'
 
 import bg from '../assets/image/bg.jpg';
 import Catalog from './Catalog'
@@ -19,25 +28,91 @@ import Catalog2 from './Catalog2'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
+const API_URL = 'http://192.168.1.16:5000'
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
+  state = {
+    visible: true,
+    modalIsOpen: false,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
-      data: [
-        { image: require('../assets/image/koala.jpg') },
-        { image: require('../assets/image/jensudriman.jpg') },
-        { image: require('../assets/image/sangpemimpi.jpg') },
-        { image: require('../assets/image/filo.jpg') },
-      ],
+      isLoading: true,
+      dataBook: [],
+      pageInfo: {},
+      refreshing: false,
+      currentPage: 1,
     };
+  }
+
+  // UNSAFE_componentWillMount() {
+  //   setTimeout(() => {
+  //     this.setState({
+  //       isLoading: false,
+  //     });
+  //   }, 3000);
+  //   BackHandler.addEventListener('hardwareBackPress', function () {
+  //     return true;
+  //   });
+  // }
+
+  fetchData = async () => {
+    await this.props.getBook('?page='.concat(this.state.currentPage));
+    const { dataBook, isLoading } = this.props.book;
+    this.setState({ dataBook, isLoading });
+  }
+
+  nextPage = () => {
+    this.setState({ currentPage: this.state.currentPage + 1 }, () => {
+      this.fetchData({ page: this.state.currentPage });
+    });
+  }
+
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    this.fetchData(this.state.currentPage).then(() => {
+      this.setState({ refreshing: false });
+    });
+  };
+
+  _renderItem({ item, index }) {
+    return (
+      <View style={dashboardStyle.item}>
+        <Image
+          style={dashboardStyle.imageContainer}
+          source={{uri: item.image}}
+        />
+      </View>
+    );
+  }
+
+  _renderItemFlat({ item, index }) {
+    return (
+      <View style={homeStyle.item}>
+        <View style={homeStyle.pictureWrapper}>
+          <Image style={homeStyle.picture} source={{ uri: item.image }} />
+        </View>
+        <View style={homeStyle.textWrapper}>
+          <Text style={homeStyle.textName}>{item.book_title}</Text>
+          <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
+          <Text style={homeStyle.textStatus}>{item.book_status}</Text>
+        </View>
+      </View>
+    );
   }
 
   logout = () => {
     this.props.navigation.navigate('login')
   }
 
+  componentDidMount() {
+    this.fetchData()
+  }
+
   render() {
+    const { currentPage, dataBook, isLoading } = this.state;
     return (
       <KeyboardAvoidingView behavior={'position'} style={dashboardStyle.parent} >
         <Image source={bg} style={dashboardStyle.accent1} />
@@ -60,36 +135,54 @@ export default class Dashboard extends Component {
             <TextInput placeholder="Search" style={dashboardStyle.inputStyle} />
           </View>
         </View>
-        <View>
-          <Text style={dashboardStyle.textBook}>List Books</Text>
-        </View>
-        <View style={dashboardStyle.button2}>
+        {/* <View style={dashboardStyle.button2}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('detail')}
             style={dashboardStyle.buttonContainer}>
             <Text style={dashboardStyle.textTouch}>Details</Text>
           </TouchableOpacity>
+        </View> */}
+        {/* <ScrollView style={dashboardStyle.marginScroll}>
+          
+        </ScrollView> */}
+        <View style={dashboardStyle.listbook}>
+          <Text style={dashboardStyle.titlelist}>List Book</Text>
+          <Carousel
+            layout={'default'}
+            activeSlideAlignment={'center'}
+            loop={true}
+            enableSnap={true}
+            autoplay={true}
+            autoplayInterval={3000}
+            sliderWidth={deviceWidth}
+            sliderHeight={150}
+            itemWidth={100}
+            data={this.props.book.dataBook}
+            renderItem={this._renderItem}
+          />
         </View>
-        <ScrollView style={dashboardStyle.marginScroll}>
-          <View style={dashboardStyle.scrollView}>
-            <Catalog data={this.state.data} dashboardStyle={dashboardStyle} />
-          </View>
-          <View style={dashboardStyle.listbook}>
-            <Text style={dashboardStyle.textScroll}>
-              Losasasasrem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-              minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-              aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-              pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-              culpa qui officia deserunt mollit anim id est laborum.
-            </Text>
-          </View>
-        </ScrollView>
+        <FlatList
+          style={dashboardStyle.booklist}
+          data={dataBook}
+          renderItem={this._renderItemFlat}
+          key={(item) => item.email}
+          onRefresh={() => this.fetchData()}
+          refreshing={isLoading}
+          onEndReached={this.nextPage}
+          onEndReachedThreshold={0.5}
+        />
       </KeyboardAvoidingView>
     )
   }
 }
+
+const mapStateToProps = state => ({
+  book: state.book
+})
+
+const mapDispatchToProps = { getBook }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
 
 const dashboardStyle = StyleSheet.create({
   parent: {
@@ -104,8 +197,10 @@ const dashboardStyle = StyleSheet.create({
     marginTop: 300,
   },
   listbook: {
-    marginLeft: 25,
-    marginTop: 190,
+    // zIndex: 5,
+    // position: 'absolute',
+    marginLeft: 15,
+    marginTop: 300,
   },
   shadow: {
     shadowColor: '#000',
@@ -263,4 +358,89 @@ const dashboardStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  cardlistdown: {
+    flex: 1,
+    width: 130,
+    height: 'auto'
+  },
+  cardlistdowncontainer: {
+    height: 195,
+  },
+  titlebook: {
+    fontFamily: "Airbnb Cereal App",
+    color: "#4B4C72",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  item: {
+    // zIndex: 7,
+    // position: 'absolute',
+    width: 100,
+    height: 150,
+  },
+  imageContainer: {
+    flex: 1,
+    marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
+    backgroundColor: 'white',
+    borderRadius: 8,
+    ...StyleSheet.absoluteFillObject,
+    resizeMode: 'stretch',
+    width: 100,
+    height: 150,
+  },
+  booklist: {
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  titlelist: {
+    marginLeft: 10,
+    marginBottom: 5,
+    fontSize: 25,
+    color: 'white',
+    fontWeight: 'bold',
+  },
 })
+
+const homeStyle = StyleSheet.create({
+  item: {
+    height: 80,
+    flexDirection: 'row',
+    marginTop: 15,
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingRight: 30,
+    paddingLeft: 30,
+  },
+  pictureWrapper: {
+    width: 70,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  picture: {
+    height: 80,
+    width: 70,
+    borderRadius: 5,
+    backgroundColor: 'black',
+  },
+  textWrapper: {
+    color: 'white',
+    justifyContent: 'center',
+    marginLeft: 10,
+    padding: 10,
+  },
+  textName: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  textGenre: {
+    color: 'white',
+    fontStyle: 'italic',
+    fontSize: 12,
+  },
+  textStatus: {
+    color: 'yellow',
+    fontSize: 18,
+  },
+});

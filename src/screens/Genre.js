@@ -1,123 +1,83 @@
 import React, {Component} from 'react';
-import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image} from 'react-native';
+import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, 
+  Image,FlatList} from 'react-native';
+
+import { connect } from 'react-redux'
+
+import { getGenre } from '../redux/actions/genre'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 import bg from '../assets/image/bg.jpg';
 
-export default class Genre extends Component {
+class Genre extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoading: true,
+      dataGenre: [],
+      currentPage: 1,
+      refreshing: false,
+    }
+  }
+  fetchData = () => {
+    this.props.getGenre();
+    const { dataGenre, isLoading } = this.props.genre;
+    this.setState({ dataGenre, isLoading });
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    this.fetchData(this.state.currentPage).then(() => {
+      this.setState({refreshing: false});
+    });
+  };
+
+  _renderItem({ item }) {
+    return (
+      <>
+        <View style={style.list}>
+          <TouchableOpacity >
+            <Text style={style.titleName}>{item.name}</Text>
+          </TouchableOpacity>
+          <View style={style.badgeWrapper}>
+            <TouchableOpacity style={style.badgeWarning}>
+              <Text style={style.badgeText}>edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={style.badgeDanger}>
+              <Text style={style.badgeText}>delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={style.line} />
+      </>
+    )
+  }
+
+  componentDidMount(){
+    this.fetchData()
+  }
   render() {
+    const {dataGenre, isLoading} = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
           <Text style={style.transactions}>Genre</Text>
           <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search Genre ...' 
+            <TextInput style={style.searchInput} placeholder='Search...' 
             placeholderTextColor='black'/>
           </View>
         </View>
-        <ScrollView style={style.content}>
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Actions</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Romance</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-          <View style={style.transactionsList}>
-              <TouchableOpacity>
-                <Text style={style.bookTitle}>Comedy</Text>
-              </TouchableOpacity>
-              <View style={style.badgeWrapper}>
-                <TouchableOpacity style={style.badgeWarning}>
-                  <Text style={style.badgeText}>edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={style.badgeDanger}>
-                  <Text style={style.badgeTextDel}>delete</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-          <View style={style.line} />
-        </ScrollView>
+        <FlatList
+          style={style.content}
+          data={dataGenre}
+          renderItem={this._renderItem}
+          keyExtractor={(item) => item.id}
+          onRefresh={() => this.fetchData()}
+          refreshing={isLoading}
+        />
         <View style={style.addBtnWrapper}>
           <TouchableOpacity style={style.addBtn}>
             <Text style={style.addBtntext}>ADD GENRE</Text>
@@ -127,6 +87,13 @@ export default class Genre extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  genre: state.genre
+})
+const mapDispatchToProps = {getGenre}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Genre)
 
 const style = StyleSheet.create({
   parent: {
@@ -145,9 +112,8 @@ const style = StyleSheet.create({
     marginTop: 20
   },
   transactions: {
-    marginTop: 30,
+    marginTop: 20,
     fontSize: 35,
-    letterSpacing: 3,
     fontWeight: 'bold',
     color: 'white',
     alignSelf: 'center'
@@ -192,13 +158,13 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   searchInput: {
-    backgroundColor: 'white',
-    height: 35,
+    marginTop: 10,
     width: deviceWidth-120,
-    fontSize: 10,
-    borderRadius: 10,
-    paddingLeft: 30,
-    elevation: 20,
+    height: 40,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    elevation: 10,
+    backgroundColor: '#fff',
   },
   content: {
     marginLeft: 30,
@@ -211,16 +177,21 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-  transactionsList: {
+  list: {
     marginTop: 20,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  bookTitle: {
+  titleName: {
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold'
+  },
+  titleEmail: {
+    color: 'white',
+    fontSize: 15,
+    fontStyle: 'italic'
   },
   addBtnWrapper: {
     width: deviceWidth,
