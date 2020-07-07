@@ -3,6 +3,7 @@ const initialState = {
   isError: false,
   errorMsg: '',
   dataBook: [],
+  dataBookId: [],
   pageInfo: []
 }
 
@@ -29,6 +30,30 @@ const bookReducers = (state=initialState, action) => {
         isLoading: false,
         isError: false,
         dataBook: action.payload.data.data,
+        pageInfo: action.payload.data.pageInfo
+      }
+    }
+    case 'GETBOOKID_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      }
+    }
+    case 'GETBOOKID_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: action.payload.response.data.message,
+      }
+    }
+    case 'GETBOOKID_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        dataBookId: action.payload.data.data,
         pageInfo: action.payload.data.pageInfo
       }
     }

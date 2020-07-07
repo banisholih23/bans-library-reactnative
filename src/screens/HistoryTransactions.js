@@ -15,15 +15,15 @@ class Transaction extends Component {
     console.log(props)
     this.state = {
       isLoading: true,
-      data: [],
+      dataTransactions: [],
       currentPage: 1,
       refreshing: false,
     }
   }
   fetchData = () => {
     this.props.getTransactions();
-    const { data, isLoading } = this.props.transactions;
-    this.setState({ data, isLoading });
+    const { dataTransactions, isLoading } = this.props.transactions;
+    this.setState({ dataTransactions, isLoading });
   }
 
   _onRefresh = () => {
@@ -43,16 +43,13 @@ class Transaction extends Component {
         <View style={style.transactionsList}>
           <TouchableOpacity>
             <Text style={style.bookTitle}>{item.book_title}</Text>
-            <Text style={style.bookTitle}>Author: {item.book_author}</Text>
-            <Text style={style.bookTitle}>OrderBy: {item.orderBy}</Text>
-            <Text style={style.bookTitle}>Status: {item.book_status}</Text>
+            <Text style={style.bookAuthor}>Author: {item.book_author}</Text>
+            <Text style={style.bookOrderBy}>OrderBy: {item.orderby}</Text>
+            <Text style={style.bookStatus}>Status: {item.book_status}</Text>
           </TouchableOpacity>
           <View style={style.badgeWrapper}>
-            <TouchableOpacity style={style.badgeWarning}>
-              <Text style={style.badgeText}>edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.badgeDanger}>
-              <Text style={style.badgeText}>delete</Text>
+            <TouchableOpacity style={style.badgeReturn}>
+              <Text style={style.badgeText}>Return</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -62,7 +59,7 @@ class Transaction extends Component {
   }
 
   render() {
-    const { data, isLoading } = this.state
+    const { dataTransactions, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
@@ -74,7 +71,7 @@ class Transaction extends Component {
         </View>
         <FlatList
           style={style.content}
-          data={data}
+          data={dataTransactions}
           renderItem={this._renderItem}
           keyExtractor={(item) => item.id}
           onRefresh={() => this.fetchData()}
@@ -127,6 +124,27 @@ const style = StyleSheet.create({
     color: 'white',
     alignSelf: 'center'
   },
+  badgeWrapper: {
+    // marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  badgeReturn: {
+    bottom: 40,
+    width: 70,
+    height: 30,
+    backgroundColor: '#1AA3E9',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 10,
+  },
+  badgeText: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: 'white',
+    textTransform: 'uppercase'
+  },
   search: {
     marginTop:10,
     alignItems: 'center'
@@ -164,6 +182,25 @@ const style = StyleSheet.create({
     fontStyle: 'italic',
     fontFamily: 'Georgia'
   },
+  bookAuthor: {
+    color: 'white',
+    fontSize: 15,
+    fontStyle: 'italic',
+    fontFamily: 'Georgia'
+  },
+  bookOrderBy: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontStyle: 'italic',
+    fontFamily: 'Georgia'
+  },
+  bookStatus: {
+    color: 'white',
+    fontSize: 15,
+    fontStyle: 'italic',
+    fontFamily: 'Georgia'
+  },
   bookDate: {
     color: 'white',
     fontSize: 12
@@ -181,6 +218,10 @@ const style = StyleSheet.create({
     fontSize: 12
   },
   bookStatus: {
+    color: 'white',
+    fontSize: 15,
+    fontStyle: 'italic',
+    fontFamily: 'Georgia',
     justifyContent: 'center'
   },
   bookReturnBadge: {

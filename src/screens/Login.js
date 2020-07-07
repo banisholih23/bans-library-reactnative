@@ -17,16 +17,41 @@ import librarylogo from '../assets/image/librarylogo.png'
 import email from '../assets/image/email.png'
 import pass from '../assets/image/pass.png'
 
+import {connect} from 'react-redux'
+
+import {loginUser} from '../redux/actions/auth'
+
+
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      email: '',
+      password: ''
+    }
   }
+
   login = () => {
-    this.props.navigation.navigate('usermenu')
+    const dataSubmit = {
+      email: this.state.email,
+      password: this.state.password
+    }
+    const {email, password} = this.state
+    if (email == "" || password == ""){
+      Alert.alert('Please fill All Column')
+    } else {
+      this.props.loginUser(dataSubmit).then((response) => {
+        Alert.alert('Holaaa!! Login Success.. Enjoy')
+        this.props.navigation.navigate('usermenu')
+      }).catch(function (error) {
+        Alert.alert('Wrong Email or Password!')
+      })
+    }
   }
+
   register = () => {
     this.props.navigation.navigate('register')
   }
@@ -46,9 +71,10 @@ export default class Login extends Component {
           <View style={loginStyle.formCard}>
             <View>
               <Image source={email} style={loginStyle.imageUser} />
-              <TextInput placeholder="Email" style={loginStyle.inputStyle} />
+              <TextInput onChangeText={(e) => {this.setState({email: e})}} placeholder="Email" style={loginStyle.inputStyle} />
               <Image source={pass} style={loginStyle.imagePass} />
               <TextInput
+                onChangeText={(e) => {this.setState({password: e})}}
                 secureTextEntry={true}
                 placeholder="Password"
                 style={loginStyle.inputStyle}
@@ -75,6 +101,10 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {loginUser}
+
+export default connect(null, mapDispatchToProps)(Login)
 
 const accentHeight = 250;
 

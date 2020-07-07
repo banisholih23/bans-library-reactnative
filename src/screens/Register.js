@@ -11,6 +11,9 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
+import { connect } from 'react-redux'
+import { register } from '../redux/actions/auth'
+
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -20,9 +23,28 @@ import user from '../assets/image/user.png'
 import email from '../assets/image/email.png'
 import pass from '../assets/image/pass.png'
 
-export default class Login extends Component {
+class Register extends Component {
   constructor(props){
     super(props)
+    this.state = {
+      username: '',
+      email: '',
+      password: ''
+    }
+  }
+
+  register = () => {
+    const {username, email, password} = this.state
+    if (username == "" || email == "" || password == "") {
+      Alert.alert("Please fill all column")
+    } else {
+      this.props.register(username, email, password).then((response) => {
+        Alert.alert('Holaa Registered Success please Login!')
+        this.props.navigation.navigate('login')
+      }).catch(function (error) {
+        Alert.alert('register failed!')
+      })
+    }
   }
 
   login = () => {
@@ -44,11 +66,12 @@ export default class Login extends Component {
           <View style={loginStyle.formCard}>
             <View>
               <Image source={user} style={loginStyle.imageUser} />
-              <TextInput placeholder="Username" style={loginStyle.inputStyle} /> 
+              <TextInput onChangeText={(e) => {this.setState({username: e})}} placeholder="Username" style={loginStyle.inputStyle} /> 
               <Image source={email} style={loginStyle.imageEmail} />
-              <TextInput placeholder="Email" style={loginStyle.inputStyle} />
+              <TextInput onChangeText={(e) => {this.setState({email: e})}} placeholder="Email" style={loginStyle.inputStyle} />
               <Image source={pass} style={loginStyle.imagePass} />
               <TextInput
+                onChangeText={(e) => {this.setState({password: e})}}
                 secureTextEntry={true}
                 placeholder="Password"
                 style={loginStyle.inputStyle}
@@ -57,7 +80,7 @@ export default class Login extends Component {
           </View>
           <View style={loginStyle.link}>
             <TouchableOpacity
-              onPress={() => Alert.alert('Regsitered...')}
+              onPress={this.register}
               style={loginStyle.submit}>
               <Text style={loginStyle.submitText}>Register</Text>
             </TouchableOpacity>
@@ -74,6 +97,10 @@ export default class Login extends Component {
     );
   }
 }
+
+const mapDispatchToProps = {register}
+
+export default connect(null, mapDispatchToProps)(Register)
 
 const accentHeight = 250;
 

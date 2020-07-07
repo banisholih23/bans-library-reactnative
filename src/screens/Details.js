@@ -14,11 +14,69 @@ import {
 import bg from '../assets/image/bg.jpg';
 import cover from '../assets/image/sangpemimpi.jpg'
 
+import { connect } from 'react-redux'
+import {postTransactions} from '../redux/actions/transactions'
+import {getBookById, getBook} from '../redux/actions/book'
+
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default class Details extends Component {
+class Details extends Component {
+  constructor(props){
+    super(props)
+    console.log('ini props',props)
+    this.state = {
+      id: this.props.route.params.id,
+      user_id: this.props.auth.dataLogin.data.id,
+      token: this.props.auth.dataLogin.data.token
+    }
+  }
+
+  borrowModal = () => {
+    Alert.alert(
+      'Borrow this book?',
+      "Promise me to take the book carefully",
+      [
+        {
+          text: '',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        { text: 'OK', 
+          onPress: this.borrow 
+      }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  borrow = () => {
+    const {token} = this.state
+    const data = {
+      book_id: this.state.id,
+      user_id: this.state.user_id
+    }
+    this.props.postTransactions(data, token).then((response) => {
+      Alert.alert('Yay! Borrow success','Contact admin for completing transaction ;)')
+      this.props.navigation.navigate('usermenu')
+    }).catch(function (error) {
+      Alert.alert('Oops!', 'Someone has already take this book :(')
+    })
+  }
+
+  fetchBook = () => {
+    const {id} = this.state
+    this.props.getBookById(id)
+  }
+
+  componentDidMount() {
+    this.fetchBook()
+  }
+
   render() {
+    const {dataBookId, isLoading} = this.props.book
     return (
       <KeyboardAvoidingView behavior={'position'} style={detailStyle.parent}>
         <Image source={bg} style={detailStyle.accent1} />
@@ -28,19 +86,17 @@ export default class Details extends Component {
         </View>
         <View style={detailStyle.accent2}>
           <View style={detailStyle.container}>
-            <Image source={cover} style={detailStyle.image} />
-            <Text style={detailStyle.text}>Sang Pemimpi</Text>
-            <Text style={detailStyle.text2}>Andrea Hirata</Text>
+            <Image source={{uri: dataBookId.image}} style={detailStyle.image} />
+            <Text style={detailStyle.text}>{dataBookId.book_title}</Text>
+            <Text style={detailStyle.text2}>{dataBookId.book_author}</Text>
           </View>
         </View>
         <View style={detailStyle.container2}>
-          <Text style={detailStyle.text3}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-          </Text>
+          <Text style={detailStyle.text3}>{dataBookId.book_desc}</Text>
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => Alert.alert('Book Borrowed...')}
+            onPress={this.borrowModal}
             style={detailStyle.borrow}>
             <Text style={detailStyle.submitBorrow}>Borrow Book</Text>
           </TouchableOpacity>
@@ -49,6 +105,15 @@ export default class Details extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  book: state.book,
+  auth: state.auth
+})
+const mapDispatchToProps = {getBookById, postTransactions}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Details)
+
 
 const accentHeight = 250
 

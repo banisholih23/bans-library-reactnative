@@ -2,7 +2,7 @@ import http from '../../services/http'
 import {REACT_APP_URL} from 'react-native-dotenv';
 
 const getAuthor = (param) =>{
-const url = `${REACT_APP_URL}books/author?${param}`
+const url = `http://192.168.1.16:5000/books/author?${param}`
 console.log(url)
 return {
   type: 'GETAUTHOR',
