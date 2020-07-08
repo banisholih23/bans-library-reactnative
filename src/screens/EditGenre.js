@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
-import { connect } from 'react-redux'
-
-import { getAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -10,81 +7,33 @@ const deviceHeight = Dimensions.get('screen').height;
 import bg from '../assets/image/bg.jpg';
 
 class Author extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      isLoading: true,
-      dataAuthor: [],
-      currentPage: 1,
-      refreshing: false,
-    }
-  }
-
-  fetchData = () => {
-    this.props.getAuthor();
-    const { dataAuthor, isLoading } = this.props.author;
-    this.setState({ dataAuthor, isLoading });
-  }
-
-  _onRefresh = () => {
-    this.setState({ refreshing: true });
-    this.fetchData(this.state.currentPage).then(() => {
-      this.setState({ refreshing: false });
-    });
-  };
-
-  editAuthor = () => {
-    this.props.navigation.navigate('editAuthor')
-  }
 
   cancelEdit = () => {
-    this.props.navigation.navigate('author')
+    this.props.navigation.navigate('genre')
   }
 
-  componentDidMount() {
-    this.fetchData()
+  addAuthor = () => {
+    this.props.navigation.navigate('addAuthor')
   }
 
   render() {
-    const { dataAuthor, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
-          <Text style={style.transactions}>Author</Text>
-          <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search...'
-              placeholderTextColor='black' />
-          </View>
+          <Text style={style.text}>Edit Genre</Text>
         </View>
-        <FlatList
-          style={style.content}
-          data={dataAuthor}
-          // renderItem={this._renderItem}
-          renderItem={({ item }) => (
-            <TouchableOpacity>
-              <View style={style.transactionsList}>
-                <Text style={style.bookTitle}>{item.name}</Text>
-                  {/* <Text style={style.bookTitle}>{item.description}</Text> */}
-                <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={this.editAuthor} style={style.badgeWarning}>
-                    <Text style={style.badgeText}>edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={style.badgeDanger}>
-                    <Text style={style.badgeText}>delete</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={style.line} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.id}
-          onRefresh={() => this.fetchData()}
-          refreshing={isLoading}
-        />
+        <View style={style.form}>
+          <TextInput style={style.formInput} placeholder='Name' placeholderTextColor='black' />
+          <TextInput style={style.formInput} placeholder='Description' placeholderTextColor='black' />
+        </View>
+        <View style={style.line} />
         <View style={style.addBtnWrapper}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('addAuthor')} style={style.addBtn}>
-            <Text style={style.addBtntext}>ADD AUTHOR</Text>
+          <TouchableOpacity onPress={this.addAuthor} style={style.addBtn}>
+            <Text style={style.addBtntext}>Edit Genre</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.cancelEdit} style={style.addBtnCancel}>
+            <Text style={style.addBtntext}>CANCEL</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -92,12 +41,7 @@ class Author extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  author: state.author
-})
-const mapDispatchToProps = { getAuthor }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Author)
+export default Author
 
 const style = StyleSheet.create({
   parent: {
@@ -111,11 +55,11 @@ const style = StyleSheet.create({
   },
   header: {
     width: deviceWidth - 100,
-    height: 150,
+    height: 30,
     alignSelf: 'center',
-    marginTop: 20
+    marginTop: 200
   },
-  transactions: {
+  text: {
     marginTop: 30,
     fontSize: 35,
     letterSpacing: 3,
@@ -126,6 +70,21 @@ const style = StyleSheet.create({
   badgeWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  form: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 70
+  },
+  formInput: {
+    width: deviceWidth - 100,
+    height: 40,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    color: 'white',
+    marginTop: 10
   },
   badgeWarning: {
     width: 50,
@@ -199,21 +158,31 @@ const style = StyleSheet.create({
   },
   addBtn: {
     marginTop: 30,
-    marginBottom: 20,
-    width: 200,
+    marginBottom: 10,
+    width: 120,
     height: 40,
     elevation: 10,
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3A9D39',
+    backgroundColor: 'green',
+    borderRadius: 10
+  },
+  addBtnCancel: {
+    marginBottom: 20,
+    width: 120,
+    height: 40,
+    elevation: 10,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
     borderRadius: 10
   },
   addBtntext: {
     color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
-    letterSpacing: 3
   },
   line: {
     width: deviceWidth - 30,

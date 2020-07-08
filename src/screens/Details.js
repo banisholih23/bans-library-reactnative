@@ -7,8 +7,10 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
-  KeyboardAvoidingView, FlatList
+  KeyboardAvoidingView, ScrollView
 } from 'react-native';
+
+import {Badge} from 'react-native-elements'
 
 import bg from '../assets/image/bg.jpg';
 import cover from '../assets/image/sangpemimpi.jpg'
@@ -19,7 +21,6 @@ import { getBook } from '../redux/actions/book'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const API_URL = 'http://192.168.1.16:5000/'
 
 class Details extends Component {
   constructor(props) {
@@ -29,15 +30,17 @@ class Details extends Component {
       id: this.props.route.params.item.id,
       user_id: this.props.auth.dataLogin.data.id,
       token: this.props.auth.dataLogin.data.token,
+      image: this.props.route.params.item.image,
       book_title: this.props.route.params.item,
     }
   }
 
   toggleBorrow = () => {
     const { book_title } = this.props.route.params.item
+    const  username  = this.props.auth.dataLogin.data.username
     Alert.alert(
       `Are You Sure to Borrow ${book_title} book?`,
-      "Be carefully.. read and enjoy it",
+      `Book  is window to the world.. keep reading ${username} :)`,
       [
         {
           text: '',
@@ -70,8 +73,9 @@ class Details extends Component {
   }
 
   render() {
-    const { book_title, book_author, book_genre, book_status, book_desc, image } = this.props.route.params.item
-    console.log(`${API_URL}${image}`)
+    const { book_title, book_author, book_genre, book_status, book_desc, image} = this.props.route.params.item
+    const API_URL = 'http://192.168.1.16:5000/'
+    console.log(`ini url image... ${API_URL}${image}`)
     return (
       <KeyboardAvoidingView behavior={'position'} style={detailStyle.parent}>
         <Image source={bg} style={detailStyle.accent1} />
@@ -81,17 +85,21 @@ class Details extends Component {
         </View>
         <View style={detailStyle.accent2}>
           <View style={detailStyle.container}>
-            <Image source={{ uri: `${API_URL}${image}` }} style={detailStyle.image} />
+            <Image source={{ uri : `${API_URL}${image}`}} style={detailStyle.image} />
             <Text style={detailStyle.text}>{book_title}</Text>
-            <Text style={detailStyle.text2}>{book_author}</Text>
+            <Text style={detailStyle.textAuthor}>{book_author}</Text>
             <Text style={detailStyle.text2}>{book_status}</Text>
-            <Text style={detailStyle.text2}>{book_genre}</Text>
+            <Badge status="primary" 
+            containerStyle={{ position: 'absolute', top: 265, right: 115 }}
+            value={<Text style={detailStyle.textBadge}>{book_genre}</Text>} />
           </View>
         </View>
-        <View style={detailStyle.container2}>
+        <ScrollView style={detailStyle.scrollView}>
+        {/* <View> */}
           <Text style={detailStyle.text3}>{book_desc}</Text>
-        </View>
-        <View>
+        {/* </View> */}
+        </ScrollView>
+        <View style={detailStyle.viewBorrow}>
           <TouchableOpacity
             onPress={this.toggleBorrow}
             style={detailStyle.borrow}>
@@ -118,6 +126,11 @@ const detailStyle = StyleSheet.create({
   parent: {
     flex: 1,
     position: 'relative',
+  },
+  scrollView: {
+    marginTop: 350,
+    marginBottom: 120,
+    // marginHorizontal: 20
   },
   accent1: {
     position: 'absolute',
@@ -146,6 +159,8 @@ const detailStyle = StyleSheet.create({
     padding: 20,
   },
   container: {
+    marginTop: 50,
+    marginBottom: 10,
     flex: 3,
     alignItems: 'center',
     justifyContent: 'center',
@@ -156,7 +171,9 @@ const detailStyle = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    marginTop: 180,
+    marginTop: 130,
+    height: 200,
+    width: 130
   },
   textDetail: {
     color: 'white',
@@ -175,11 +192,26 @@ const detailStyle = StyleSheet.create({
     marginTop: 10,
     fontSize: 30,
   },
+  textAuthor: {
+    color: 'white',
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    // marginTop: 5,
+    fontSize: 15,
+  },
   text2: {
+    color: 'yellow',
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+    // marginTop: 5,
+    fontSize: 15,
+  },
+  textBadge: {
     color: 'white',
     fontWeight: 'bold',
     backgroundColor: 'transparent',
-    marginTop: 5,
+    // marginTop: 5,
     fontSize: 15,
   },
   text3: {
@@ -187,7 +219,9 @@ const detailStyle = StyleSheet.create({
     fontWeight: 'bold',
     backgroundColor: 'transparent',
     textAlign: 'center',
-    marginTop: 250,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 5,
     marginBottom: 10,
     fontSize: 15,
   },
@@ -198,13 +232,17 @@ const detailStyle = StyleSheet.create({
     height: accentHeight,
     width: deviceWidth,
   },
+  viewBorrow: {
+    bottom: 80,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   borrow: {
     position: 'absolute',
     width: 150,
-    height: 55,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: -420,
     right: 120,
     backgroundColor: '#F69470',
     borderRadius: 30,

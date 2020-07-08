@@ -1,6 +1,8 @@
-import React, {Component} from 'react';
-import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, 
-  Image,FlatList} from 'react-native';
+import React, { Component } from 'react';
+import {
+  Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity,
+  Image, FlatList
+} from 'react-native';
 
 import { connect } from 'react-redux'
 
@@ -28,11 +30,19 @@ class Genre extends Component {
   }
 
   _onRefresh = () => {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     this.fetchData(this.state.currentPage).then(() => {
-      this.setState({refreshing: false});
+      this.setState({ refreshing: false });
     });
   };
+
+  editGenre = () => {
+    this.props.navigation.navigate('editGenre')
+  }
+
+  addGenre = () => {
+    this.props.navigation.navigate('addGenre')
+  }
 
   _renderItem({ item }) {
     return (
@@ -55,31 +65,48 @@ class Genre extends Component {
     )
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchData()
   }
   render() {
-    const {dataGenre, isLoading} = this.state
+    const { dataGenre, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
           <Text style={style.transactions}>Genre</Text>
           <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search...' 
-            placeholderTextColor='black'/>
+            <TextInput style={style.searchInput} placeholder='Search...'
+              placeholderTextColor='black' />
           </View>
         </View>
         <FlatList
           style={style.content}
           data={dataGenre}
-          renderItem={this._renderItem}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <View style={style.list}>
+                <TouchableOpacity >
+                  <Text style={style.titleName}>{item.name}</Text>
+                </TouchableOpacity>
+                <View style={style.badgeWrapper}>
+                  <TouchableOpacity onPress={this.editGenre} style={style.badgeWarning}>
+                    <Text style={style.badgeText}>edit</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={style.badgeDanger}>
+                    <Text style={style.badgeText}>delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={style.line} />
+            </TouchableOpacity>
+          )}
           keyExtractor={(item) => item.id}
           onRefresh={() => this.fetchData()}
           refreshing={isLoading}
         />
         <View style={style.addBtnWrapper}>
-          <TouchableOpacity style={style.addBtn}>
+          <TouchableOpacity onPress={this.addGenre} style={style.addBtn}>
             <Text style={style.addBtntext}>ADD GENRE</Text>
           </TouchableOpacity>
         </View>
@@ -91,7 +118,7 @@ class Genre extends Component {
 const mapStateToProps = state => ({
   genre: state.genre
 })
-const mapDispatchToProps = {getGenre}
+const mapDispatchToProps = { getGenre }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Genre)
 
@@ -106,7 +133,7 @@ const style = StyleSheet.create({
     height: 800
   },
   header: {
-    width: deviceWidth-100,
+    width: deviceWidth - 100,
     height: 150,
     alignSelf: 'center',
     marginTop: 20
@@ -154,12 +181,12 @@ const style = StyleSheet.create({
     textTransform: 'uppercase'
   },
   search: {
-    marginTop:10,
+    marginTop: 10,
     alignItems: 'center',
   },
   searchInput: {
     marginTop: 10,
-    width: deviceWidth-120,
+    width: deviceWidth - 120,
     height: 40,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -216,7 +243,7 @@ const style = StyleSheet.create({
     letterSpacing: 3
   },
   line: {
-    width: deviceWidth-30,
+    width: deviceWidth - 30,
     alignSelf: 'center',
     height: 1,
     width: 300,

@@ -76,6 +76,7 @@ class Dashboard extends Component {
 
   render() {
     const { dataBook, isLoading } = this.state;
+    const  username  = this.props.auth.dataLogin.data.username
     return (
       <View style={dashboardStyle.parent} >
         <Image source={bg} style={dashboardStyle.accent1} />
@@ -83,7 +84,7 @@ class Dashboard extends Component {
           <View style={dashboardStyle.textGood}>
             <Text style={dashboardStyle.text}>Good</Text>
             <Text style={dashboardStyle.text2}>Afternoon,</Text>
-            <Text style={dashboardStyle.text3}>Bani Sholih</Text>
+            <Text style={dashboardStyle.text3}>{username}</Text>
           </View>
         </View>
         <View style={dashboardStyle.button}>
@@ -109,7 +110,7 @@ class Dashboard extends Component {
             autoplayInterval={3000}
             sliderWidth={deviceWidth}
             sliderHeight={150}
-            itemWidth={105}
+            itemWidth={95}
             data={dataBook}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', {item})} >
@@ -123,9 +124,6 @@ class Dashboard extends Component {
             )}/>
           <Text style={dashboardStyle.titleBook}>List Book</Text>
         </View>
-        <TouchableOpacity>
-
-        </TouchableOpacity>
         <FlatList
           style={dashboardStyle.booklist}
           data={dataBook}
@@ -136,7 +134,6 @@ class Dashboard extends Component {
                 <View style={homeStyle.pictureWrapper}>
                   <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
                   <Text style={homeStyle.textName}>{item.book_title}</Text>
-                  <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
                   <Text style={homeStyle.textStatus}>{item.book_status}</Text>
                 </View>
               </View>
@@ -153,7 +150,8 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  book: state.book
+  book: state.book,
+  auth: state.auth
 })
 
 const mapDispatchToProps = { getBook }
@@ -178,7 +176,7 @@ const dashboardStyle = StyleSheet.create({
     // zIndex: 5,
     // position: 'absolute',
     marginLeft: 15,
-    marginTop: 300,
+    marginTop: 255,
   },
   listBookContent: {
     flexDirection: 'row',
@@ -196,7 +194,7 @@ const dashboardStyle = StyleSheet.create({
     width: deviceWidth,
     position: 'absolute',
     zIndex: 2,
-    marginTop: 55,
+    marginTop: 20,
     padding: 20,
   },
   textGood: {
@@ -223,7 +221,7 @@ const dashboardStyle = StyleSheet.create({
     fontSize: 30,
   },
   inputStyle: {
-    marginTop: 220,
+    marginTop: 180,
     marginLeft: 20,
     width: 350,
     height: 50,
@@ -292,14 +290,13 @@ const dashboardStyle = StyleSheet.create({
     // borderRadius: 8,
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'stretch',
-    width: 100,
-    height: 150,
+    width: 90,
+    height: 130,
   },
   booklist: {
     width: deviceWidth,
     height: deviceHeight,
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 5,
   },
   titlelist: {
     marginBottom: 15,
@@ -308,7 +305,7 @@ const dashboardStyle = StyleSheet.create({
     fontWeight: 'bold',
   },
   titleBook: {
-    marginTop: 15,
+    marginTop: -15,
     marginBottom: 5,
     fontSize: 20,
     color: 'white',
@@ -318,7 +315,7 @@ const dashboardStyle = StyleSheet.create({
 
 const homeStyle = StyleSheet.create({
   item: {
-    bottom: 50,
+    bottom: 60,
     padding: 4,
     marginLeft: 1,
     flexDirection: 'row',
