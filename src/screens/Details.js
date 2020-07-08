@@ -22,20 +22,6 @@ const deviceHeight = Dimensions.get('window').height;
 const API_URL = 'http://192.168.1.16:5000/'
 
 class Details extends Component {
-  // componentDidUpdate(){
-  //   const {msg, isError} = this.props.dataBook
-  //   const param = '?page=1'
-  //   if(msg !== ''){
-  //       if(isError){
-  //         Alert.alert(msg)
-  //       } else {
-  //         Alert.alert(msg)
-  //         this.props.getBook(param)
-  //         this.props.navigation.goBack()
-  //       }
-  //   this.props.clear()
-  //   }
-  // }
   constructor(props) {
     super(props)
     console.log('ini props', props)
