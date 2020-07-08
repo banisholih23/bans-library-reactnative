@@ -67,39 +67,6 @@ class Dashboard extends Component {
   };
 
   logout = (id) => {
-    this.props.navigation.navigate('login')
-  }
-
-  _renderItem({ item, index }) {
-    console.log(`${API_URL}${item.image}`)
-    return (
-      <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', id)} >
-        <View style={dashboardStyle.item}>
-          <Image
-            style={dashboardStyle.imageContainer}
-            source={{ uri: `${API_URL}${item.image}` }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  _renderItemFlat({ item, index }) {
-    return (
-      <TouchableOpacity onPress={this.showDetails} >
-        <View style={homeStyle.item}>
-          <View style={homeStyle.pictureWrapper}>
-            <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
-            <Text style={homeStyle.textName}>{item.book_title}</Text>
-            <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
-            <Text style={homeStyle.textStatus}>{item.book_status}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-
-  logout = (id) => {
     this.props.navigation.navigate('detail', id)
   }
 
