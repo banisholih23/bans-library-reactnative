@@ -12,7 +12,7 @@ return {
 }
 
 const getBookById = (id) =>{
-  const url = `${ip}books/${id}`
+  const url = `${ip}books/detail/${id}`
   return {
     type: 'GETBOOKID',
     payload: http().get(url)

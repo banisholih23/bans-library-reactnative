@@ -3,7 +3,7 @@ const initialState = {
   isError: false,
   errorMsg: '',
   dataBook: [],
-  dataBookId: [],
+  dataBookId: {},
   pageInfo: []
 }
 

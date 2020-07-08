@@ -1,8 +1,8 @@
 import http from '../../services/http'
-import {REACT_APP_URL} from 'react-native-dotenv';
+const ip = 'http://192.168.1.16:5000/'
 
 const getGenre = (param) =>{
-const url = `${REACT_APP_URL}books/genres?${param}`
+const url = `${ip}books/genres?${param}`
 console.log(url)
 return {
   type: 'GETGENRE',
@@ -11,7 +11,7 @@ return {
 }
 
 const postGenre = (dataPost) =>{
-const url = `${REACT_APP_URL}books/genres`
+const url = `${ip}books/genres`
 return {
   type: 'POSTGENRE',
   payload: http().post(url, dataPost)
@@ -19,7 +19,7 @@ return {
 }
 
 const patchGenre = (id, dataBook) =>{
-const url = `${REACT_APP_URL}books/genres/${id}`
+const url = `${ip}books/genres/${id}`
 return {
   type: 'PATCHGENRE',
   payload: http().patch(url, dataBook)
@@ -27,7 +27,7 @@ return {
 }
 
 const deleteGenre = (id) =>{
-const url = `${REACT_APP_URL}books/genres/${id}`
+const url = `${ip}books/genres/${id}`
 return {
   type: 'DELETEGENRE',
   payload: http().delete(url)

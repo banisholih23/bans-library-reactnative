@@ -15,9 +15,6 @@ import {
   BackHandler,
 } from 'react-native';
 
-import {withNavigation} from '@react-navigation/compat';
-// import { withNavigation } from 'react-navigation';
-
 import Carousel from 'react-native-snap-carousel';
 import { connect } from 'react-redux'
 
@@ -59,9 +56,15 @@ class Dashboard extends Component {
     });
   };
 
-  showDetails = () => {
-    this.props.navigation.navigate('detail')
+  showDetails = (id) => {
+    this.props.navigation.navigate('detail', id)
   }
+
+  detailBook = id => {
+    this.props.navigation.navigate('detail', {
+      id,
+    });
+  };
 
   logout = (id) => {
     this.props.navigation.navigate('login')
@@ -72,11 +75,11 @@ class Dashboard extends Component {
     return (
       <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', id)} >
         <View style={dashboardStyle.item}>
-        <Image
-          style={dashboardStyle.imageContainer}
-          source={{ uri: `${API_URL}${item.image}` }}
-        />
-      </View>
+          <Image
+            style={dashboardStyle.imageContainer}
+            source={{ uri: `${API_URL}${item.image}` }}
+          />
+        </View>
       </TouchableOpacity>
     );
   }
@@ -84,14 +87,14 @@ class Dashboard extends Component {
   _renderItemFlat({ item, index }) {
     return (
       <TouchableOpacity onPress={this.showDetails} >
-      <View style={homeStyle.item}>
-        <View style={homeStyle.pictureWrapper}>
-          <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
-          <Text style={homeStyle.textName}>{item.book_title}</Text>
-          <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
-          <Text style={homeStyle.textStatus}>{item.book_status}</Text>
+        <View style={homeStyle.item}>
+          <View style={homeStyle.pictureWrapper}>
+            <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
+            <Text style={homeStyle.textName}>{item.book_title}</Text>
+            <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
+            <Text style={homeStyle.textStatus}>{item.book_status}</Text>
+          </View>
         </View>
-      </View>
       </TouchableOpacity>
     );
   }
@@ -129,7 +132,7 @@ class Dashboard extends Component {
           </View>
         </View>
         <View style={dashboardStyle.listbook}>
-        <Text style={dashboardStyle.titlelist}>Recomendation</Text>
+          <Text style={dashboardStyle.titlelist}>Recomendation</Text>
           <Carousel
             layout={'default'}
             activeSlideAlignment={'center'}
@@ -141,9 +144,17 @@ class Dashboard extends Component {
             sliderHeight={150}
             itemWidth={105}
             data={dataBook}
-            renderItem={this._renderItem}
-          />
-        <Text style={dashboardStyle.titleBook}>List Book</Text>
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', {item})} >
+                <View style={dashboardStyle.item}>
+                  <Image
+                    style={dashboardStyle.imageContainer}
+                    source={{ uri: `${API_URL}${item.image}` }}
+                  />
+                </View>
+              </TouchableOpacity>
+            )}/>
+          <Text style={dashboardStyle.titleBook}>List Book</Text>
         </View>
         <TouchableOpacity>
 
@@ -151,7 +162,19 @@ class Dashboard extends Component {
         <FlatList
           style={dashboardStyle.booklist}
           data={dataBook}
-          renderItem={this._renderItemFlat}
+          // renderItem={this._renderItemFlat}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', { item })}>
+              <View style={homeStyle.item}>
+                <View style={homeStyle.pictureWrapper}>
+                  <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
+                  <Text style={homeStyle.textName}>{item.book_title}</Text>
+                  <Text style={homeStyle.textGenre}>{item.book_genre}</Text>
+                  <Text style={homeStyle.textStatus}>{item.book_status}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
           key={(item) => item.email}
           onRefresh={() => this.fetchData()}
           refreshing={isLoading}
@@ -168,7 +191,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = { getBook }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(Dashboard))
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
 
 const dashboardStyle = StyleSheet.create({
   parent: {
@@ -235,7 +258,7 @@ const dashboardStyle = StyleSheet.create({
   inputStyle: {
     marginTop: 220,
     marginLeft: 20,
-    width: 350, 
+    width: 350,
     height: 50,
     paddingHorizontal: 20,
     borderRadius: 30,
@@ -330,7 +353,7 @@ const homeStyle = StyleSheet.create({
   item: {
     bottom: 50,
     padding: 4,
-    marginLeft: 1, 
+    marginLeft: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },

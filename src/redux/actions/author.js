@@ -1,8 +1,8 @@
 import http from '../../services/http'
-import {REACT_APP_URL} from 'react-native-dotenv';
+const ip = 'http://192.168.1.16:5000/'
 
 const getAuthor = (param) =>{
-const url = `http://192.168.1.16:5000/books/author?${param}`
+const url = `${ip}books/author?${param}`
 console.log(url)
 return {
   type: 'GETAUTHOR',
@@ -11,7 +11,7 @@ return {
 }
 
 const postAuthor = (dataPost) =>{
-const url = `${REACT_APP_URL}books/author`
+const url = `${ip}books/author`
 return {
   type: 'POSTAUTHOR',
   payload: http().post(url, dataPost)
@@ -19,7 +19,7 @@ return {
 }
 
 const patchAuthor = (id, dataBook) =>{
-const url = `${REACT_APP_URL}books/author/${id}`
+const url = `${ip}books/author/${id}`
 return {
   type: 'PATCHAUTHOR',
   payload: http().patch(url, dataBook)
@@ -27,7 +27,7 @@ return {
 }
 
 const deleteAuthor = (id) =>{
-const url = `${REACT_APP_URL}books/author/${id}`
+const url = `${ip}books/author/${id}`
 return {
   type: 'DELETEAUTHOR',
   payload: http().delete(url)

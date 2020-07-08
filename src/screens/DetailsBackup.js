@@ -7,19 +7,18 @@ import {
   Dimensions,
   TouchableOpacity,
   Alert,
-  KeyboardAvoidingView, FlatList
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import bg from '../assets/image/bg.jpg';
 import cover from '../assets/image/sangpemimpi.jpg'
 
 import { connect } from 'react-redux'
-import { postTransactions } from '../redux/actions/transactions'
-import { getBook } from '../redux/actions/book'
+import {postTransactions} from '../redux/actions/transactions'
+import {getBook} from '../redux/actions/book'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const API_URL = 'http://192.168.1.16:5000/'
 
 class Details extends Component {
   // componentDidUpdate(){
@@ -36,22 +35,20 @@ class Details extends Component {
   //   this.props.clear()
   //   }
   // }
-  constructor(props) {
+  constructor(props){
     super(props)
-    console.log('ini props', props)
+    console.log('ini props',props)
     this.state = {
-      id: this.props.route.params.item.id,
+      id: this.props.route.params.id,
       user_id: this.props.auth.dataLogin.data.id,
-      token: this.props.auth.dataLogin.data.token,
-      book_title: this.props.route.params.item,
+      token: this.props.auth.dataLogin.data.token
     }
   }
 
   toggleBorrow = () => {
-    const { book_title } = this.props.route.params.item
     Alert.alert(
-      `Are You Sure to Borrow ${book_title} book?`,
-      "Be carefully.. read and enjoy it",
+      'Borrow this book?',
+      "Promise me to take the book carefully",
       [
         {
           text: '',
@@ -60,17 +57,16 @@ class Details extends Component {
           text: 'Cancel',
           style: 'cancel'
         },
-        {
-          text: 'OK',
+        { text: 'OK', 
           onPress: this.borrowBook
-        }
+      }
       ],
       { cancelable: false }
     )
   }
 
   borrowBook = () => {
-    const { token } = this.state
+    const {token} = this.state
     const data = {
       book_id: this.state.id,
       user_id: this.state.user_id
@@ -84,8 +80,7 @@ class Details extends Component {
   }
 
   render() {
-    const { book_title, book_author, book_genre, book_status, book_desc, image } = this.props.route.params.item
-    console.log(`${API_URL}${image}`)
+    const {book_title, book_author, book_genre, book_status, book_desc, image} = this.props.route.params.item
     return (
       <KeyboardAvoidingView behavior={'position'} style={detailStyle.parent}>
         <Image source={bg} style={detailStyle.accent1} />
@@ -95,7 +90,7 @@ class Details extends Component {
         </View>
         <View style={detailStyle.accent2}>
           <View style={detailStyle.container}>
-            <Image source={{ uri: `${API_URL}${image}` }} style={detailStyle.image} />
+            <Image source={{uri : image}}  style={detailStyle.image} />
             <Text style={detailStyle.text}>{book_title}</Text>
             <Text style={detailStyle.text2}>{book_author}</Text>
             <Text style={detailStyle.text2}>{book_status}</Text>
@@ -121,7 +116,7 @@ const mapStateToProps = state => ({
   book: state.book,
   auth: state.auth
 })
-const mapDispatchToProps = { getBook, postTransactions }
+const mapDispatchToProps = {getBook, postTransactions}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Details)
 
@@ -182,7 +177,6 @@ const detailStyle = StyleSheet.create({
     fontSize: 20,
   },
   text: {
-    textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
     backgroundColor: 'transparent',

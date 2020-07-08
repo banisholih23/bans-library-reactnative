@@ -1,8 +1,8 @@
 import http from '../../services/http'
-import {REACT_APP_URL} from 'react-native-dotenv';
+const ip = 'http://192.168.1.16:5000/'
 
 const getUser = (param) => {
-  const url = `${REACT_APP_URL}books/auth/users?${param}`
+  const url = `${ip}books/auth/users?${param}`
   console.log(url)
   return {
     type: 'GETUSER',
@@ -11,7 +11,7 @@ const getUser = (param) => {
 }
 
 const deleteUser = (id) => {
-  const url = `${REACT_APP_URL}books/auth/users/${id}`
+  const url = `${ip}books/auth/users/${id}`
   console.log(url)
   return {
     type: 'DELETEUSER',
