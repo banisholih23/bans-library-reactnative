@@ -67,7 +67,7 @@ class Dashboard extends Component {
   };
 
   logout = (id) => {
-    this.props.navigation.navigate('detail', id)
+    this.props.navigation.navigate('login')
   }
 
   componentDidMount() {
