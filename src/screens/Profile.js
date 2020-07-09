@@ -11,15 +11,20 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
+import { connect } from 'react-redux'
+import { getBook } from '../redux/actions/book'
+
 import profile from '../assets/image/profile2.jpg'
 import user from '../assets/image/user.png'
-import email from '../assets/image/email.png'
+import emailImage from '../assets/image/email.png'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
-export default class Details extends Component {
+class Profile extends Component {
   render() {
+    const  username  = this.props.auth.dataLogin.data.username
+    const  email  = this.props.auth.dataLogin.data.email
     return (
       <View style={styles.container}>
         <View style={styles.header} />
@@ -27,15 +32,15 @@ export default class Details extends Component {
         <View style={styles.body}>
           <Image></Image>
           <View style={styles.bodyContent}>
-            <Text style={styles.name}>Bani Sholih</Text>
+            <Text style={styles.name}>{username}</Text>
             <Text style={styles.info}>This is Your Profile</Text>
             <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
             <View style={styles.formCard}>
               <View>
-                <TextInput placeholder="Bani Sholih" style={styles.inputStyle} />
+                <Text style={styles.inputStyle}>{username}</Text>
                 <Image source={user} style={styles.imageUser} />
-                <TextInput placeholder="banisholih@gmail.com" style={styles.inputStyle} />
-                <Image source={email} style={styles.imagePass} />
+                <Text style={styles.inputStyle}>{email}</Text>
+                <Image source={emailImage} style={styles.imagePass} />
               </View>
             </View>
             <TouchableOpacity 
@@ -49,6 +54,14 @@ export default class Details extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  book: state.book,
+  auth: state.auth
+})
+const mapDispatchToProps = { getBook }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const styles = StyleSheet.create({
   header: {
@@ -65,11 +78,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     marginTop: 130,
-  },
-  name: {
-    fontSize: 22,
-    color: "#FFFFFF",
-    fontWeight: '600',
   },
   body: {
     marginTop: 40,
@@ -131,10 +139,14 @@ const styles = StyleSheet.create({
     top: 90,
   },
   inputStyle: {
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 20,
     marginLeft: 40,
     width: 260,
     height: 50,
+    fontSize: 15,
+    paddingTop: 12,
     paddingHorizontal: 20,
     borderRadius: 10,
     backgroundColor: '#fff',

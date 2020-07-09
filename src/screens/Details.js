@@ -95,9 +95,7 @@ class Details extends Component {
           </View>
         </View>
         <ScrollView style={detailStyle.scrollView}>
-        {/* <View> */}
           <Text style={detailStyle.text3}>{book_desc}</Text>
-        {/* </View> */}
         </ScrollView>
         <View style={detailStyle.viewBorrow}>
           <TouchableOpacity

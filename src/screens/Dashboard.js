@@ -7,19 +7,12 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Alert,
-  Button,
-  ScrollView,
-  KeyboardAvoidingView,
   FlatList,
-  BackHandler,
 } from 'react-native';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Carousel from 'react-native-snap-carousel';
 import { connect } from 'react-redux'
-
 import { getBook } from '../redux/actions/book'
-
 import bg from '../assets/image/bg.jpg';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -40,6 +33,8 @@ class Dashboard extends Component {
       pageInfo: {},
       refreshing: false,
       currentPage: 1,
+      page: 1,
+      search: ''
     };
   }
 
@@ -48,6 +43,13 @@ class Dashboard extends Component {
     const { dataBook, isLoading } = this.props.book;
     this.setState({ dataBook, isLoading });
   }
+
+  handleSearch = async (e) => {
+    const { search } = this.state;
+    await this.props.getBook('search='.concat(search.toLowerCase()));
+    const { dataBook, isLoading } = this.props.book;
+    this.setState({ dataBook, isLoading });
+  };
 
   _onRefresh = () => {
     this.setState({ refreshing: true });
@@ -76,7 +78,8 @@ class Dashboard extends Component {
 
   render() {
     const { dataBook, isLoading } = this.state;
-    const  username  = this.props.auth.dataLogin.data.username
+    const username = this.props.auth.dataLogin.data.username
+    const { genre, search } = this.state
     return (
       <View style={dashboardStyle.parent} >
         <Image source={bg} style={dashboardStyle.accent1} />
@@ -96,9 +99,15 @@ class Dashboard extends Component {
         </View>
         <View style={dashboardStyle.form}>
           <View style={dashboardStyle.formInput}>
-            <TextInput placeholder="Search" style={dashboardStyle.inputStyle} />
+            <TextInput
+              onChangeText={(e) => { this.setState({ search: e }) }}
+              placeholder="Search" style={dashboardStyle.inputStyle}
+            />
           </View>
         </View>
+        <TouchableOpacity style={dashboardStyle.iconSearch} onPress={this.handleSearch}>
+          <Icon name="search" color={'#AAAAAA'} size={25} />
+        </TouchableOpacity>
         <View style={dashboardStyle.listbook}>
           <Text style={dashboardStyle.titlelist}>Recomendation</Text>
           <Carousel
@@ -113,7 +122,7 @@ class Dashboard extends Component {
             itemWidth={95}
             data={dataBook}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', {item})} >
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', { item })} >
                 <View style={dashboardStyle.item}>
                   <Image
                     style={dashboardStyle.imageContainer}
@@ -121,7 +130,7 @@ class Dashboard extends Component {
                   />
                 </View>
               </TouchableOpacity>
-            )}/>
+            )} />
           <Text style={dashboardStyle.titleBook}>List Book</Text>
         </View>
         <FlatList
@@ -163,6 +172,11 @@ const dashboardStyle = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  iconSearch: {
+    zIndex: 12,
+    top: 202,
+    right: -320,
+  },
   titlebook: {
     fontFamily: "Airbnb Cereal App",
     color: "#4B4C72",
@@ -176,7 +190,7 @@ const dashboardStyle = StyleSheet.create({
     // zIndex: 5,
     // position: 'absolute',
     marginLeft: 15,
-    marginTop: 255,
+    marginTop: 225,
   },
   listBookContent: {
     flexDirection: 'row',

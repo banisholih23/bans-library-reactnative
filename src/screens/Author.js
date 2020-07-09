@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList, Alert } from 'react-native';
 import { connect } from 'react-redux'
 
-import { getAuthor } from '../redux/actions/author'
+import { getAuthor, deleteAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -24,6 +24,15 @@ class Author extends Component {
     this.props.getAuthor();
     const { dataAuthor, isLoading } = this.props.author;
     this.setState({ dataAuthor, isLoading });
+  }
+
+  deleteAuthor = (id) => {
+    this.props.deleteAuthor(id).then((response) => {
+      Alert.alert('Congratulations Delete Author Success!!')
+      this.props.navigation.navigate('author')
+    }).catch(function (error) {
+      Alert.alert('something erorr!')
+    })
   }
 
   _onRefresh = () => {
@@ -70,7 +79,7 @@ class Author extends Component {
                   <TouchableOpacity onPress={this.editAuthor} style={style.badgeWarning}>
                     <Text style={style.badgeText}>edit</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={style.badgeDanger}>
+                  <TouchableOpacity onPress={() => this.deleteAuthor(item.id)} style={style.badgeDanger}>
                     <Text style={style.badgeText}>delete</Text>
                   </TouchableOpacity>
                 </View>
@@ -95,7 +104,7 @@ class Author extends Component {
 const mapStateToProps = state => ({
   author: state.author
 })
-const mapDispatchToProps = { getAuthor }
+const mapDispatchToProps = { getAuthor, deleteAuthor }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Author)
 

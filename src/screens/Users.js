@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList, Alert } from 'react-native';
 
 import { connect } from 'react-redux'
 
-import { getUser } from '../redux/actions/users'
+import { getUser, deleteUser } from '../redux/actions/users'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -26,52 +26,58 @@ class User extends Component {
     this.setState({ dataUser, isLoading });
   }
 
+  deleteUser = (id) => {
+    this.props.deleteUser(id).then((response) => {
+      Alert.alert('Congratulations Delete User Success!!')
+      this.props.navigation.navigate('user')
+    }).catch(function (error) {
+      Alert.alert('something erorr!')
+    })
+  }
+
   _onRefresh = () => {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     this.fetchData(this.state.currentPage).then(() => {
-      this.setState({refreshing: false});
+      this.setState({ refreshing: false });
     });
   };
 
-  componentDidMount(){
+  componentDidMount() {
     this.fetchData()
   }
 
-  _renderItem({ item }) {
-    return (
-      <>
-        <View style={style.list}>
-          <TouchableOpacity >
-            <Text style={style.titleName}>{item.username}</Text>
-            <Text style={style.titleEmail}>{item.email}</Text>
-          </TouchableOpacity>
-          <View style={style.badgeWrapper}>
-            <TouchableOpacity style={style.badgeDanger}>
-              <Text style={style.badgeText}>delete</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={style.line} />
-      </>
-    )
-  }
-
   render() {
-    const {dataUser, isLoading} = this.state
+    const { dataUser, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
           <Text style={style.transactions}>Users</Text>
           <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search...' 
-            placeholderTextColor='black'/>
+            <TextInput style={style.searchInput} placeholder='Search...'
+              placeholderTextColor='black' />
           </View>
         </View>
         <FlatList
           style={style.content}
           data={dataUser}
-          renderItem={this._renderItem}
+          // renderItem={this._renderItem}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <View style={style.list}>
+                <TouchableOpacity >
+                  <Text style={style.titleName}>{item.username}</Text>
+                  <Text style={style.titleEmail}>{item.email}</Text>
+                </TouchableOpacity>
+                <View style={style.badgeWrapper}>
+                  <TouchableOpacity onPress={() => this.deleteUser(item.id)} style={style.badgeDanger}>
+                    <Text style={style.badgeText}>delete</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={style.line} />
+            </TouchableOpacity>
+          )}
           keyExtractor={(item) => item.id}
           onRefresh={() => this.fetchData()}
           refreshing={isLoading}
@@ -84,7 +90,7 @@ class User extends Component {
 const mapStateToProps = state => ({
   user: state.user
 })
-const mapDispatchToProps = {getUser}
+const mapDispatchToProps = { getUser, deleteUser }
 
 export default connect(mapStateToProps, mapDispatchToProps)(User)
 
@@ -100,7 +106,7 @@ const style = StyleSheet.create({
     height: 800
   },
   header: {
-    width: deviceWidth-100,
+    width: deviceWidth - 100,
     height: 150,
     alignSelf: 'center',
     marginTop: 20
@@ -139,12 +145,12 @@ const style = StyleSheet.create({
     textTransform: 'uppercase'
   },
   search: {
-    marginTop:10,
+    marginTop: 10,
     alignItems: 'center',
   },
   searchInput: {
     marginTop: 10,
-    width: deviceWidth-120,
+    width: deviceWidth - 120,
     height: 40,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -201,7 +207,7 @@ const style = StyleSheet.create({
     letterSpacing: 3
   },
   line: {
-    width: deviceWidth-30,
+    width: deviceWidth - 30,
     alignSelf: 'center',
     height: 1,
     width: 300,

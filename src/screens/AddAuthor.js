@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, Alert } from 'react-native';
+
+import { connect } from 'react-redux'
+import { postAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -7,9 +10,34 @@ const deviceHeight = Dimensions.get('screen').height;
 import bg from '../assets/image/bg.jpg';
 
 class Author extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      name: '',
+      description: ''
+    }
+  }
 
   author = () => {
     this.props.navigation.navigate('author')
+  }
+
+  addAuthor = () => {
+    const dataPost = {
+      name: this.state.name,
+      description: this.state.description
+    }
+    const { name, description } = this.state
+    if (name == "" || description == "") {
+      Alert.alert('Please fill All Column')
+    } else {
+      this.props.postAuthor(dataPost).then((response) => {
+        Alert.alert('Holaaa!! Add Author Success..')
+        this.props.navigation.navigate('genre')
+      }).catch(function (error) {
+        Alert.alert('Something Wrong!')
+      })
+    }
   }
 
   render() {
@@ -20,12 +48,16 @@ class Author extends Component {
           <Text style={style.text}>Add Author</Text>
         </View>
         <View style={style.form}>
-          <TextInput style={style.formInput} placeholder='Name' placeholderTextColor='black' />
-          <TextInput style={style.formInput} placeholder='Description' placeholderTextColor='black' />
+          <TextInput
+          onChangeText={(e) => { this.setState({ name: e }) }}
+          style={style.formInput} placeholder='Name' placeholderTextColor='black' />
+          <TextInput 
+          onChangeText={(e) => { this.setState({ description: e }) }}
+          style={style.formInput} placeholder='Description' placeholderTextColor='black' />
         </View>
         <View style={style.line} />
         <View style={style.addBtnWrapper}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('addAuthor')} style={style.addBtn}>
+          <TouchableOpacity onPress={this.addAuthor} style={style.addBtn}>
             <Text style={style.addBtntext}>ADD AUTHOR</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.author} style={style.addBtnCancel}>
@@ -37,7 +69,9 @@ class Author extends Component {
   }
 }
 
-export default Author
+const mapDispatchToProps = {postAuthor}
+
+export default connect(null, mapDispatchToProps)(Author)
 
 const style = StyleSheet.create({
   parent: {
@@ -79,7 +113,7 @@ const style = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    color: 'white',
+    color: 'black',
     marginTop: 10
   },
   badgeWarning: {

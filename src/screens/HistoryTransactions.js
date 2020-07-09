@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
-import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, 
-  ScrollView, Image, FlatList} from 'react-native';
+import React, { Component } from 'react';
+import {
+  Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity,
+  ScrollView, Image, FlatList, Alert
+} from 'react-native';
 import bg from '../assets/image/bg.jpg';
 import { connect } from 'react-redux'
 
-import { getTransactions } from '../redux/actions/transactions'
+import { getTransactions, returnTransactions } from '../redux/actions/transactions'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -12,24 +14,37 @@ const deviceHeight = Dimensions.get('screen').height;
 class Transaction extends Component {
   constructor(props) {
     super(props)
-    console.log(props)
+    console.log('ini props',props)
     this.state = {
+      id: this.props.transactions.dataTransactions.id,
+      token: this.props.auth.dataLogin.data.token,
       isLoading: true,
       dataTransactions: [],
       currentPage: 1,
       refreshing: false,
     }
   }
+
   fetchData = () => {
     this.props.getTransactions();
     const { dataTransactions, isLoading } = this.props.transactions;
     this.setState({ dataTransactions, isLoading });
   }
 
+  returnBook = (id) => {
+    const {token} = this.state
+    this.props.returnTransactions(id, token).then((response) => {
+      Alert.alert('Congratulations Return Book Success!!')
+      this.props.navigation.navigate('usermenu')
+    }).catch(function (error) {
+      Alert.alert('something erorr!')
+    })
+  }
+
   _onRefresh = () => {
-    this.setState({refreshing: true});
+    this.setState({ refreshing: true });
     this.fetchData(this.state.currentPage).then(() => {
-      this.setState({refreshing: false});
+      this.setState({ refreshing: false });
     });
   };
 
@@ -37,42 +52,40 @@ class Transaction extends Component {
     this.fetchData()
   }
 
-  _renderItem({ item }) {
-    return (
-      <>
-        <View style={style.transactionsList}>
-          <TouchableOpacity>
-            <Text style={style.bookTitle}>{item.book_title}</Text>
-            <Text style={style.bookAuthor}>Author: {item.book_author}</Text>
-            <Text style={style.bookOrderBy}>OrderBy: {item.orderby}</Text>
-            <Text style={style.bookStatus}>Status: {item.book_status}</Text>
-          </TouchableOpacity>
-          <View style={style.badgeWrapper}>
-            <TouchableOpacity style={style.badgeReturn}>
-              <Text style={style.badgeText}>Return</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={style.line} />
-      </>
-    )
-  }
-
   render() {
     const { dataTransactions, isLoading } = this.state
+    const id =  this.props.transactions.dataTransactions.id
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
           <Text style={style.transactions}>Transactions</Text>
           <View style={style.search}>
-            <TextInput style={style.searchInput} placeholder='Search...' placeholderTextColor='black'/>
+            <TextInput style={style.searchInput} placeholder='Search...' placeholderTextColor='black' />
           </View>
         </View>
         <FlatList
           style={style.content}
           data={dataTransactions}
-          renderItem={this._renderItem}
+          // renderItem={this._renderItem}
+          renderItem={({ item }) => (
+            <TouchableOpacity>
+              <View style={style.transactionsList}>
+                <TouchableOpacity>
+                  <Text style={style.bookTitle}>{item.book_title}</Text>
+                  <Text style={style.bookAuthor}>Author: {item.book_author}</Text>
+                  <Text style={style.bookOrderBy}>OrderBy: {item.orderby}</Text>
+                  <Text style={style.bookStatus}>Status: {item.book_status}</Text>
+                </TouchableOpacity>
+                <View style={style.badgeWrapper}>
+                  <TouchableOpacity onPress={() => this.returnBook(item.id)} style={style.badgeReturn}>
+                    <Text style={style.badgeText}>Return</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={style.line} />
+            </TouchableOpacity>
+          )}
           keyExtractor={(item) => item.id}
           onRefresh={() => this.fetchData()}
           refreshing={isLoading}
@@ -83,9 +96,10 @@ class Transaction extends Component {
 }
 
 const mapStateToProps = state => ({
-  transactions: state.transactions
+  transactions: state.transactions,
+  auth: state.auth
 })
-const mapDispatchToProps = {getTransactions}
+const mapDispatchToProps = { getTransactions, returnTransactions }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction)
 
@@ -100,7 +114,7 @@ const style = StyleSheet.create({
     height: 800
   },
   header: {
-    width: deviceWidth-100,
+    width: deviceWidth - 100,
     height: 150,
     alignSelf: 'center',
     marginTop: 20
@@ -146,12 +160,12 @@ const style = StyleSheet.create({
     textTransform: 'uppercase'
   },
   search: {
-    marginTop:10,
+    marginTop: 10,
     alignItems: 'center'
   },
   searchInput: {
     marginTop: 10,
-    width: deviceWidth-120,
+    width: deviceWidth - 120,
     height: 40,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -240,7 +254,7 @@ const style = StyleSheet.create({
     textTransform: 'uppercase'
   },
   line: {
-    width: deviceWidth-30,
+    width: deviceWidth - 30,
     alignSelf: 'center',
     height: 1,
     width: 300,

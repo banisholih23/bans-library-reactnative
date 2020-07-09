@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {
   Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity,
-  Image, FlatList
+  Image, FlatList, Alert
 } from 'react-native';
 
 import { connect } from 'react-redux'
 
-import { getGenre } from '../redux/actions/genre'
+import { getGenre, deleteGenre } from '../redux/actions/genre'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -29,6 +29,15 @@ class Genre extends Component {
     this.setState({ dataGenre, isLoading });
   }
 
+  deleteGenre = (id) => {
+    this.props.deleteGenre(id).then((response) => {
+      Alert.alert('Congratulations Delete Genre Success!!')
+      this.props.navigation.navigate('genre')
+    }).catch(function (error) {
+      Alert.alert('something erorr!')
+    })
+  }
+
   _onRefresh = () => {
     this.setState({ refreshing: true });
     this.fetchData(this.state.currentPage).then(() => {
@@ -42,27 +51,6 @@ class Genre extends Component {
 
   addGenre = () => {
     this.props.navigation.navigate('addGenre')
-  }
-
-  _renderItem({ item }) {
-    return (
-      <>
-        <View style={style.list}>
-          <TouchableOpacity >
-            <Text style={style.titleName}>{item.name}</Text>
-          </TouchableOpacity>
-          <View style={style.badgeWrapper}>
-            <TouchableOpacity style={style.badgeWarning}>
-              <Text style={style.badgeText}>edit</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={style.badgeDanger}>
-              <Text style={style.badgeText}>delete</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={style.line} />
-      </>
-    )
   }
 
   componentDidMount() {
@@ -93,7 +81,7 @@ class Genre extends Component {
                   <TouchableOpacity onPress={this.editGenre} style={style.badgeWarning}>
                     <Text style={style.badgeText}>edit</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={style.badgeDanger}>
+                  <TouchableOpacity onPress={() => this.deleteGenre(item.id)} style={style.badgeDanger}>
                     <Text style={style.badgeText}>delete</Text>
                   </TouchableOpacity>
                 </View>
@@ -118,7 +106,7 @@ class Genre extends Component {
 const mapStateToProps = state => ({
   genre: state.genre
 })
-const mapDispatchToProps = { getGenre }
+const mapDispatchToProps = { getGenre, deleteGenre }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Genre)
 
