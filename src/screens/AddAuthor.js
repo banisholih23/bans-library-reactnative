@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, Alert } from 'react-native';
 
 import { connect } from 'react-redux'
-import { postAuthor } from '../redux/actions/author'
+import { postAuthor, getAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -14,8 +14,14 @@ class Author extends Component {
     super(props)
     this.state = {
       name: '',
-      description: ''
+      description: '',
+      isLoading: true
     }
+  }
+
+  fetchData = () => {
+    thi.props.getAuthor()
+    this.setState({isLoading: false})
   }
 
   author = () => {
@@ -33,7 +39,7 @@ class Author extends Component {
     } else {
       this.props.postAuthor(dataPost).then((response) => {
         Alert.alert('Holaaa!! Add Author Success..')
-        this.props.navigation.navigate('genre')
+        this.props.navigation.navigate('author')
       }).catch(function (error) {
         Alert.alert('Something Wrong!')
       })

@@ -7,11 +7,6 @@ import librarylogo from '../assets/image/librarylogo.png'
 import email from '../assets/image/email.png'
 import pass from '../assets/image/pass.png'
 
-import {connect} from 'react-redux'
-
-import {loginUser} from '../redux/actions/auth'
-
-
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
@@ -24,26 +19,16 @@ class Login extends Component {
     }
   }
 
-  login = () => {
-    const dataSubmit = {
-      email: this.state.email,
-      password: this.state.password
-    }
-    const {email, password} = this.state
+  loginAdmin = () => {
+    const { email, password} = this.state
     if (email == "" || password == ""){
       Alert.alert('Please fill All Column')
+    } else if (( email === 'banslibrary@admin') && (password === 'admin')) {
+      Alert.alert('Holaa!! Login Success.. Welcome Admin :)')
+      this.props.navigation.navigate('usermenu')
     } else {
-      this.props.loginUser(dataSubmit).then((response) => {
-        Alert.alert('Holaaa!! Login Success.. Enjoy')
-        this.props.navigation.navigate('menuuser')
-      }).catch(function (error) {
-        Alert.alert('Wrong Email or Password!')
-      })
+      Alert.alert('wrong email and password')
     }
-  }
-
-  register = () => {
-    this.props.navigation.navigate('register')
   }
 
   render() {
@@ -54,7 +39,7 @@ class Login extends Component {
           <View style={loginStyle.container}>
             <Image source={librarylogo} style={loginStyle.image} />
             <Text style={loginStyle.text}>Ban's Library</Text>
-            <Text style={loginStyle.text2}>Please Login</Text>
+            <Text style={loginStyle.text2}>Hello Admin! Please Login</Text>
           </View>
         </View>
         <View style={loginStyle.form}>
@@ -73,28 +58,27 @@ class Login extends Component {
           </View>
           <View style={loginStyle.link}>
             <TouchableOpacity
-              onPress={this.login}
+              onPress={this.loginAdmin}
               style={loginStyle.submit}>
               <Text style={loginStyle.submitText}>Login</Text>
             </TouchableOpacity>
             <Text style={loginStyle.forgotPassword}>Forgot Password?</Text>
           </View>
-          <View style={loginStyle.container2}>
+          {/* <View style={loginStyle.container2}>
             <TouchableOpacity
               onPress={this.register}
               style={loginStyle.submitRegist}>
               <Text style={loginStyle.textRegister}>Don't Have Account ? Please Register</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
       </KeyboardAvoidingView>
     );
   }
 }
 
-const mapDispatchToProps = {loginUser}
 
-export default connect(null, mapDispatchToProps)(Login)
+export default Login
 
 const accentHeight = 250;
 

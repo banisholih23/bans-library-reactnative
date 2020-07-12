@@ -3,6 +3,7 @@ const initialState = {
   isError: false,
   errorMsg: '',
   dataTransactions: [],
+  dataTransactionsUser: [],
 }
 
 const transactionsReducers = (state=initialState, action) => {
@@ -28,6 +29,29 @@ const transactionsReducers = (state=initialState, action) => {
         isLoading: false,
         isError: false,
         dataTransactions: action.payload.data.data
+      }
+    }
+    case 'GETTRANSACTIONBYUSER_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      }
+    }
+    case 'GETTRANSACTIONBYUSER_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        errorMsg: action.payload.response.data.message,
+      }
+    }
+    case 'GETTRANSACTIONBYUSER_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        dataTransactionsUser: action.payload.data.data,
       }
     }
     case 'POSTTRANSACTIONS_PENDING': {

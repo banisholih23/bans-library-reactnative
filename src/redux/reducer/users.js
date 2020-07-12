@@ -30,6 +30,27 @@ const userReducers = (state=initialState, action) => {
         dataUser: action.payload.data.data,
       }
     }
+    case 'PATCHUSER_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      }
+    }
+    case 'PATCHUSER_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true
+      }
+    }
+    case 'PATCHUSER_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false
+      }
+    }
     case 'DELETEUSER_PENDING': {
       return {
         ...state,

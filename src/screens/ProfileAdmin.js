@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {Text, View, Image, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 
-import { connect } from 'react-redux'
-import { getBook } from '../redux/actions/book'
 
 import profile from '../assets/image/profile2.jpg'
 import user from '../assets/image/user.png'
@@ -12,20 +10,7 @@ const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
 
 class Profile extends Component {
-
-  edit = () => {
-    this.props.navigation.navigate('editProfile', 
-      {
-        id: this.props.auth.dataLogin.data.id,
-        username: this.props.auth.dataLogin.data.username,
-        email: this.props.auth.dataLogin.data.email
-      }
-    )
-  }
-
   render() {
-    const  username  = this.props.auth.dataLogin.data.username
-    const  email  = this.props.auth.dataLogin.data.email
     return (
       <View style={styles.container}>
         <View style={styles.header} />
@@ -33,21 +18,21 @@ class Profile extends Component {
         <View style={styles.body}>
           <Image></Image>
           <View style={styles.bodyContent}>
-            <Text style={styles.name}>{username}</Text>
+            <Text style={styles.name}>Admin</Text>
             <Text style={styles.info}>This is Your Profile</Text>
             <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
             <View style={styles.formCard}>
               <View>
-                <Text style={styles.inputStyle}>{username}</Text>
+                <Text style={styles.inputStyle}>Bani Sholih</Text>
                 <Image source={user} style={styles.imageUser} />
-                <Text style={styles.inputStyle}>{email}</Text>
+                <Text style={styles.inputStyle}>banisholih23@gmail.com</Text>
                 <Image source={emailImage} style={styles.imagePass} />
               </View>
             </View>
             <TouchableOpacity 
-              onPress={this.edit}
+              onPress={() => this.props.navigation.navigate('home')}
               style={styles.buttonContainer}>
-              <Text style={styles.text}>Edit Profile</Text>
+              <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -56,13 +41,7 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  book: state.book,
-  auth: state.auth
-})
-const mapDispatchToProps = { getBook }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile)
+export default Profile
 
 const styles = StyleSheet.create({
   header: {

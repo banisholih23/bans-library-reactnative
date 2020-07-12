@@ -23,27 +23,45 @@ class Genre extends Component {
       refreshing: false,
     }
   }
+
   fetchData = () => {
     this.props.getGenre();
-    const { dataGenre, isLoading } = this.props.genre;
-    this.setState({ dataGenre, isLoading });
+    this.setState({ isLoading: false });
+  }
+
+  refresh = () => {
+    this.fetchData()
+  }
+
+  toggleEdit = (id) => {
+    Alert.alert(
+      'Are you sure want to delete this genre?',
+      "",
+      [
+        {
+          text: '',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        { text: 'Delete', 
+          onPress: () => this.deleteGenre(id)
+      }
+      ],
+      { cancelable: false }
+    )
   }
 
   deleteGenre = (id) => {
     this.props.deleteGenre(id).then((response) => {
       Alert.alert('Congratulations Delete Genre Success!!')
       this.props.navigation.navigate('genre')
+      this.refresh()
     }).catch(function (error) {
       Alert.alert('something erorr!')
     })
   }
-
-  _onRefresh = () => {
-    this.setState({ refreshing: true });
-    this.fetchData(this.state.currentPage).then(() => {
-      this.setState({ refreshing: false });
-    });
-  };
 
   editGenre = () => {
     this.props.navigation.navigate('editGenre')
@@ -57,7 +75,7 @@ class Genre extends Component {
     this.fetchData()
   }
   render() {
-    const { dataGenre, isLoading } = this.state
+    const { dataGenre, isLoading } = this.props.genre
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
@@ -78,10 +96,13 @@ class Genre extends Component {
                   <Text style={style.titleName}>{item.name}</Text>
                 </TouchableOpacity>
                 <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={this.editGenre} style={style.badgeWarning}>
+                  <TouchableOpacity onPress={() => {this.props.navigation.navigate('editGenre', {
+                    id: item.id,
+                    name: item.name
+                  })}} style={style.badgeWarning}>
                     <Text style={style.badgeText}>edit</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.deleteGenre(item.id)} style={style.badgeDanger}>
+                  <TouchableOpacity onPress={() => this.toggleEdit(item.id)} style={style.badgeDanger}>
                     <Text style={style.badgeText}>delete</Text>
                   </TouchableOpacity>
                 </View>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList, Alert } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity,  Image, FlatList, Alert } from 'react-native';
 
 import { connect } from 'react-redux'
 
@@ -20,34 +20,52 @@ class User extends Component {
       refreshing: false,
     }
   }
+
+  toggleDelete = (id) => {
+    Alert.alert(
+      'Are you sure want to delete this user?',
+      "",
+      [
+        {
+          text: '',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        { text: 'Delete', 
+          onPress: () => this.deleteUser(id)
+      }
+      ],
+      { cancelable: false }
+    )
+  }
+
   fetchData = () => {
     this.props.getUser();
-    const { dataUser, isLoading } = this.props.user;
-    this.setState({ dataUser, isLoading });
+    this.setState({ isLoading: false });
   }
 
   deleteUser = (id) => {
     this.props.deleteUser(id).then((response) => {
       Alert.alert('Congratulations Delete User Success!!')
       this.props.navigation.navigate('user')
+      this.refresh()
     }).catch(function (error) {
       Alert.alert('something erorr!')
     })
   }
 
-  _onRefresh = () => {
-    this.setState({ refreshing: true });
-    this.fetchData(this.state.currentPage).then(() => {
-      this.setState({ refreshing: false });
-    });
-  };
+  refresh = () => {
+    this.fetchData()
+  }
 
   componentDidMount() {
     this.fetchData()
   }
 
   render() {
-    const { dataUser, isLoading } = this.state
+    const { dataUser, isLoading } = this.props.user
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
@@ -70,7 +88,7 @@ class User extends Component {
                   <Text style={style.titleEmail}>{item.email}</Text>
                 </TouchableOpacity>
                 <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={() => this.deleteUser(item.id)} style={style.badgeDanger}>
+                  <TouchableOpacity onPress={() => this.toggleDelete(item.id)} style={style.badgeDanger}>
                     <Text style={style.badgeText}>delete</Text>
                   </TouchableOpacity>
                 </View>
@@ -79,7 +97,7 @@ class User extends Component {
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
-          onRefresh={() => this.fetchData()}
+          onRefresh={() => {this.refresh()}}
           refreshing={isLoading}
         />
       </View>

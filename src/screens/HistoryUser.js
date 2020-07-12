@@ -3,7 +3,7 @@ import {Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, 
 import bg from '../assets/image/bg.jpg';
 import { connect } from 'react-redux'
 
-import { getTransactions, returnTransactions } from '../redux/actions/transactions'
+import { getTransactionUser, getTransactions, returnTransactions } from '../redux/actions/transactions'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -13,7 +13,8 @@ class Transaction extends Component {
     super(props)
     console.log('ini props',props)
     this.state = {
-      id: this.props.transactions.dataTransactions.id,
+      // id: this.props.transactions.dataTransactions.id,
+      id: this.props.auth.dataLogin.data.id,
       token: this.props.auth.dataLogin.data.token,
       dataTransactions: [],
       isLoding: true,
@@ -21,9 +22,9 @@ class Transaction extends Component {
     }
   }
 
-  toggleDelete = (id) => {
+  toggleReturn = (id) => {
     Alert.alert(
-      'Are you sure want to delete this transaction?',
+      'Are you sure want to return this book?',
       "",
       [
         {
@@ -33,25 +34,27 @@ class Transaction extends Component {
           text: 'Cancel',
           style: 'cancel'
         },
-        { text: 'Delete', 
-          onPress: () => this.deleteReturnBook(id)
+        { text: 'Return', 
+          onPress: () => this.returnBook(id)
       }
       ],
       { cancelable: false }
     )
   }
 
+
   fetchData = () => {
-    this.props.getTransactions();
+    const {id} = this.state
+    this.props.getTransactionUser(id);
     this.setState({ isLoading: false })
   }
 
-  deleteReturnBook = (id) => {
+  returnBook = (id) => {
     const {token} = this.state
     this.props.returnTransactions(id, token).then((response) => {
-      Alert.alert('Congratulations Delete Success!!')
+      Alert.alert('Congratulations Return Book Success!!')
       this.refreshData()
-      this.props.navigation.navigate('usermenu')
+      this.props.navigation.navigate('menuuser')
     }).catch(function (error) {
       Alert.alert('something erorr!')
     })
@@ -66,7 +69,7 @@ class Transaction extends Component {
   }
 
   render() {
-    const { dataTransactions, isLoading } = this.props.transactions
+    const { dataTransactionsUser, isLoading } = this.props.transactions
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
@@ -78,7 +81,7 @@ class Transaction extends Component {
         </View>
         <FlatList
           style={style.content}
-          data={dataTransactions}
+          data={dataTransactionsUser}
           // renderItem={this._renderItem}
           renderItem={({ item }) => (
             <TouchableOpacity>
@@ -86,12 +89,11 @@ class Transaction extends Component {
                 <TouchableOpacity>
                   <Text style={style.bookTitle}>{item.book_title}</Text>
                   <Text style={style.bookAuthor}>Author: {item.book_author}</Text>
-                  <Text style={style.bookOrderBy}>OrderBy: {item.orderby}</Text>
                   <Text style={style.bookStatus}>Status: {item.book_status}</Text>
                 </TouchableOpacity>
                 <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={() => this.toggleDelete(item.id)} style={style.badgeReturn}>
-                    <Text style={style.badgeText}>Delete</Text>
+                  <TouchableOpacity onPress={() => this.toggleReturn(item.id)} style={style.badgeReturn}>
+                    <Text style={style.badgeText}>Return</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -111,7 +113,7 @@ const mapStateToProps = state => ({
   transactions: state.transactions,
   auth: state.auth
 })
-const mapDispatchToProps = { getTransactions, returnTransactions }
+const mapDispatchToProps = { getTransactionUser, getTransactions, returnTransactions }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction)
 
@@ -159,7 +161,7 @@ const style = StyleSheet.create({
     bottom: 40,
     width: 70,
     height: 30,
-    backgroundColor: 'red',
+    backgroundColor: '#1AA3E9',
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
@@ -215,7 +217,7 @@ const style = StyleSheet.create({
     fontFamily: 'Georgia'
   },
   bookOrderBy: {
-    color: 'yellow',
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
     fontStyle: 'italic',

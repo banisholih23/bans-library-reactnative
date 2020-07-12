@@ -16,19 +16,15 @@ class Genre extends Component {
     super(props)
     this.state = {
       name: '',
-      created_at: '',
-      updated_at: ''
     }
   }
 
   addGenre = () => {
     const dataPost = {
       name: this.state.name,
-      created_at: this.state.created_at,
-      updated_at: this.state.updated_at
     }
-    const { name, created_at, updated_at } = this.state
-    if (name == "" || created_at == "" || updated_at == "") {
+    const { name } = this.state
+    if (name == "" ) {
       Alert.alert('Please fill All Column')
     } else {
       this.props.postGenre(dataPost).then((response) => {
@@ -55,25 +51,6 @@ class Genre extends Component {
           <TextInput onChangeText={(e) => { this.setState({ name: e }) }} style={style.formInput} placeholder='Name' placeholderTextColor='black' />
           {/* <TextInput onChangeText={(e) => { this.setState({ created_at: e }) }} style={style.formInput} placeholder='Description' placeholderTextColor='black' />
           <TextInput onChangeText={(e) => { this.setState({ updated_at: e }) }} style={style.formInput} placeholder='Description' placeholderTextColor='black' /> */}
-          <TextInputMask
-            style={style.textInputMask}
-            type={'datetime'}
-            options={{
-              format: 'DD/MM/YYYY'
-            }}
-            value={this.state.created_at}
-            onChangeText={created_at => { this.setState({ created_at: created_at }) }}
-          />
-          <View style={style.line} />
-          <TextInputMask
-            style={style.textInputMask}
-            type={'datetime'}
-            options={{
-              format: 'DD/MM/YYYY'
-            }}
-            value={this.state.updated_at}
-            onChangeText={(e) => { this.setState({ updated_at: e }) }}
-          />
         </View>
         <View style={style.line} />
         <View style={style.addBtnWrapper}>

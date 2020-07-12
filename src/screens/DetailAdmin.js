@@ -5,15 +5,12 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
-  Alert,
   KeyboardAvoidingView, ScrollView
 } from 'react-native';
 
 import {Badge} from 'react-native-elements'
 
 import bg from '../assets/image/bg.jpg';
-import cover from '../assets/image/sangpemimpi.jpg'
 
 import { connect } from 'react-redux'
 import { postTransactions } from '../redux/actions/transactions'
@@ -33,43 +30,6 @@ class Details extends Component {
       image: this.props.route.params.item.image,
       book_title: this.props.route.params.item,
     }
-  }
-
-  toggleBorrow = () => {
-    const { book_title } = this.props.route.params.item
-    const  username  = this.props.auth.dataLogin.data.username
-    Alert.alert(
-      `Are You Sure to Borrow ${book_title} book?`,
-      `Book  is window to the world.. keep reading ${username} :)`,
-      [
-        {
-          text: '',
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'OK',
-          onPress: this.borrowBook
-        }
-      ],
-      { cancelable: false }
-    )
-  }
-
-  borrowBook = () => {
-    const { token } = this.state
-    const data = {
-      book_id: this.state.id,
-      user_id: this.state.user_id
-    }
-    this.props.postTransactions(data, token).then((response) => {
-      Alert.alert('Congratulations Borrow Book Success!!')
-      this.props.navigation.navigate('menuuser')
-    }).catch(function (error) {
-      Alert.alert('something erorr!')
-    })
   }
 
   render() {
@@ -97,13 +57,6 @@ class Details extends Component {
         <ScrollView style={detailStyle.scrollView}>
           <Text style={detailStyle.text3}>{book_desc}</Text>
         </ScrollView>
-        <View style={detailStyle.viewBorrow}>
-          <TouchableOpacity
-            onPress={this.toggleBorrow}
-            style={detailStyle.borrow}>
-            <Text style={detailStyle.submitBorrow}>Borrow Book</Text>
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     );
   }

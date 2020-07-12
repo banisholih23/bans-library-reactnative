@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, FlatList } from 'react-native';
 import { connect } from 'react-redux'
 
-import { getAuthor, deleteAuthor } from '../redux/actions/author'
+import { getAuthor } from '../redux/actions/author'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
@@ -23,44 +23,6 @@ class Author extends Component {
   fetchData = () => {
     this.props.getAuthor();
     this.setState({ isLoading: false });
-  }
-
-  toggleEdit = (id) => {
-    Alert.alert(
-      'Are you sure want to delete this author?',
-      "",
-      [
-        {
-          text: '',
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        { text: 'Delete', 
-          onPress: () => this.deleteAuthor(id)
-      }
-      ],
-      { cancelable: false }
-    )
-  }
-
-  deleteAuthor = (id) => {
-    this.props.deleteAuthor(id).then((response) => {
-      Alert.alert('Congratulations Delete Author Success!!')
-      this.props.navigation.navigate('author')
-      this.refresh()
-    }).catch(function (error) {
-      Alert.alert('something erorr!')
-    })
-  }
-
-  refresh = () => {
-    this.fetchData()
-  }
-
-  cancelEdit = () => {
-    this.props.navigation.navigate('author')
   }
 
   componentDidMount() {
@@ -88,31 +50,14 @@ class Author extends Component {
               <View style={style.transactionsList}>
                 <Text style={style.bookTitle}>{item.name}</Text>
                   {/* <Text style={style.bookTitle}>{item.description}</Text> */}
-                <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={() => {this.props.navigation.navigate('editAuthor', {
-                    id: item.id,
-                    name: item.name,
-                    description: item.description
-                  })}} style={style.badgeWarning}>
-                    <Text style={style.badgeText}>edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.toggleEdit(item.id)} style={style.badgeDanger}>
-                    <Text style={style.badgeText}>delete</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
               <View style={style.line} />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
-          onRefresh={() => {this.refresh()}}
+          onRefresh={() => {this.fetchData()}}
           refreshing={isLoading}
         />
-        <View style={style.addBtnWrapper}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('addAuthor')} style={style.addBtn}>
-            <Text style={style.addBtntext}>ADD AUTHOR</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }
@@ -121,7 +66,7 @@ class Author extends Component {
 const mapStateToProps = state => ({
   author: state.author
 })
-const mapDispatchToProps = { getAuthor, deleteAuthor }
+const mapDispatchToProps = { getAuthor }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Author)
 
@@ -142,7 +87,7 @@ const style = StyleSheet.create({
     marginTop: 20
   },
   transactions: {
-    marginTop: 30,
+    marginTop: 20,
     fontSize: 35,
     letterSpacing: 3,
     fontWeight: 'bold',

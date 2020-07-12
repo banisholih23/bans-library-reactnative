@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-import Dashboard from '../screens/Dashboard'
-import Profile from '../screens/Profile'
+import Dashboard from '../screens/DashboardAdmin'
+import Profile from '../screens/ProfileAdmin'
 import History from '../screens/HistoryTransactions'
 import Genre from '../screens/Genre'
 import User from '../screens/Users'

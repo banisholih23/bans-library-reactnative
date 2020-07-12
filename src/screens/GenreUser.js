@@ -1,79 +1,51 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
+import {
+  Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity,
+  Image, FlatList, Alert
+} from 'react-native';
+
 import { connect } from 'react-redux'
 
-import { getAuthor, deleteAuthor } from '../redux/actions/author'
+import { getGenre } from '../redux/actions/genre'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 import bg from '../assets/image/bg.jpg';
 
-class Author extends Component {
+class Genre extends Component {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: true,
-      dataAuthor: [],
+      dataGenre: [],
       currentPage: 1,
       refreshing: false,
     }
   }
-
   fetchData = () => {
-    this.props.getAuthor();
-    this.setState({ isLoading: false });
+    this.props.getGenre();
+    const { dataGenre, isLoading } = this.props.genre;
+    this.setState({ dataGenre, isLoading });
   }
 
-  toggleEdit = (id) => {
-    Alert.alert(
-      'Are you sure want to delete this author?',
-      "",
-      [
-        {
-          text: '',
-        },
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        { text: 'Delete', 
-          onPress: () => this.deleteAuthor(id)
-      }
-      ],
-      { cancelable: false }
-    )
-  }
-
-  deleteAuthor = (id) => {
-    this.props.deleteAuthor(id).then((response) => {
-      Alert.alert('Congratulations Delete Author Success!!')
-      this.props.navigation.navigate('author')
-      this.refresh()
-    }).catch(function (error) {
-      Alert.alert('something erorr!')
-    })
-  }
-
-  refresh = () => {
-    this.fetchData()
-  }
-
-  cancelEdit = () => {
-    this.props.navigation.navigate('author')
-  }
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    this.fetchData(this.state.currentPage).then(() => {
+      this.setState({ refreshing: false });
+    });
+  };
 
   componentDidMount() {
     this.fetchData()
   }
-
   render() {
-    const { dataAuthor, isLoading } = this.props.author
+    const { dataGenre, isLoading } = this.state
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
-          <Text style={style.transactions}>Author</Text>
+          <Text style={style.transactions}>Genre</Text>
           <View style={style.search}>
             <TextInput style={style.searchInput} placeholder='Search...'
               placeholderTextColor='black' />
@@ -81,49 +53,32 @@ class Author extends Component {
         </View>
         <FlatList
           style={style.content}
-          data={dataAuthor}
-          // renderItem={this._renderItem}
+          data={dataGenre}
           renderItem={({ item }) => (
             <TouchableOpacity>
-              <View style={style.transactionsList}>
-                <Text style={style.bookTitle}>{item.name}</Text>
-                  {/* <Text style={style.bookTitle}>{item.description}</Text> */}
-                <View style={style.badgeWrapper}>
-                  <TouchableOpacity onPress={() => {this.props.navigation.navigate('editAuthor', {
-                    id: item.id,
-                    name: item.name,
-                    description: item.description
-                  })}} style={style.badgeWarning}>
-                    <Text style={style.badgeText}>edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.toggleEdit(item.id)} style={style.badgeDanger}>
-                    <Text style={style.badgeText}>delete</Text>
-                  </TouchableOpacity>
-                </View>
+              <View style={style.list}>
+                <TouchableOpacity >
+                  <Text style={style.titleName}>{item.name}</Text>
+                </TouchableOpacity>
               </View>
               <View style={style.line} />
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
-          onRefresh={() => {this.refresh()}}
+          onRefresh={() => this.fetchData()}
           refreshing={isLoading}
         />
-        <View style={style.addBtnWrapper}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('addAuthor')} style={style.addBtn}>
-            <Text style={style.addBtntext}>ADD AUTHOR</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  author: state.author
+  genre: state.genre
 })
-const mapDispatchToProps = { getAuthor, deleteAuthor }
+const mapDispatchToProps = { getGenre }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Author)
+export default connect(mapStateToProps, mapDispatchToProps)(Genre)
 
 const style = StyleSheet.create({
   parent: {
@@ -142,9 +97,8 @@ const style = StyleSheet.create({
     marginTop: 20
   },
   transactions: {
-    marginTop: 30,
+    marginTop: 20,
     fontSize: 35,
-    letterSpacing: 3,
     fontWeight: 'bold',
     color: 'white',
     alignSelf: 'center'
@@ -208,16 +162,21 @@ const style = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
-  transactionsList: {
+  list: {
     marginTop: 20,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
-  bookTitle: {
+  titleName: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  titleEmail: {
     color: 'white',
     fontSize: 15,
-    fontWeight: 'bold'
+    fontStyle: 'italic'
   },
   addBtnWrapper: {
     width: deviceWidth,

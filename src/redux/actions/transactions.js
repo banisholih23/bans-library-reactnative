@@ -11,6 +11,14 @@ const getTransactions = (param) => {
   }
 }
 
+const getTransactionUser = (id) =>{
+  const url = `${ip}books/transactions/user/${id}`
+  return {
+    type: 'GETTRANSACTIONBYUSER',
+    payload: http().get(url)
+    }
+  }
+
 const postTransactions = (dataPost) => {
   const url = `${ip}books/transactions`
   return {
@@ -33,4 +41,4 @@ export const clear = () => {
   }
 }
 
-export { getTransactions, postTransactions, returnTransactions }
+export { getTransactions, postTransactions, returnTransactions, getTransactionUser }

@@ -18,11 +18,11 @@ return {
   }
 }
 
-const patchAuthor = (id, dataBook) =>{
+const patchAuthor = (id, dataAuthor) =>{
 const url = `${ip}books/author/${id}`
 return {
   type: 'PATCHAUTHOR',
-  payload: http().patch(url, dataBook)
+  payload: http().patch(url, dataAuthor)
   }
 }
 

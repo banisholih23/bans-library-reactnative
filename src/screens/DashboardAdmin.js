@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
-import {Text, TextInput, View, Image, StyleSheet, Dimensions, TouchableOpacity,  FlatList, Alert  } from 'react-native';
+import {
+  Text,
+  TextInput,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  FlatList,
+  Alert
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Carousel from 'react-native-snap-carousel';
 import { connect } from 'react-redux'
 import { getBook } from '../redux/actions/book'
-import {logout} from '../redux/actions/auth'
 import bg from '../assets/image/bg.jpg';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -45,11 +54,6 @@ class Dashboard extends Component {
     )
   }
 
-  logout = () => {
-    this.props.logout()
-    this.props.navigation.navigate('login')
-  }
-
   fetchData = async () => {
     await this.props.getBook('?page='.concat(this.state.currentPage));
     const { dataBook, isLoading } = this.props.book;
@@ -63,13 +67,17 @@ class Dashboard extends Component {
     this.setState({ dataBook, isLoading });
   };
 
+  logout = (id) => {
+    this.props.navigation.navigate('loginAdmin')
+  }
+
   componentDidMount() {
     this.fetchData()
   }
 
   render() {
     const { dataBook, isLoading } = this.state;
-    const username = this.props.auth.dataLogin.data.username
+    const { genre, search } = this.state
     return (
       <View style={dashboardStyle.parent} >
         <Image source={bg} style={dashboardStyle.accent1} />
@@ -77,7 +85,7 @@ class Dashboard extends Component {
           <View style={dashboardStyle.textGood}>
             <Text style={dashboardStyle.text}>Good</Text>
             <Text style={dashboardStyle.text2}>Afternoon,</Text>
-            <Text style={dashboardStyle.text3}>{username}</Text>
+            <Text style={dashboardStyle.text3}>Admin</Text>
           </View>
         </View>
         <View style={dashboardStyle.button}>
@@ -112,7 +120,7 @@ class Dashboard extends Component {
             itemWidth={95}
             data={dataBook}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', { item })} >
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('detailAdmin', { item })} >
                 <View style={dashboardStyle.item}>
                   <Image
                     style={dashboardStyle.imageContainer}
@@ -128,7 +136,7 @@ class Dashboard extends Component {
           data={dataBook}
           // renderItem={this._renderItemFlat}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', { item })}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('detailAdmin', { item })}>
               <View style={homeStyle.item}>
                 <View style={homeStyle.pictureWrapper}>
                   <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
@@ -153,7 +161,7 @@ const mapStateToProps = state => ({
   auth: state.auth
 })
 
-const mapDispatchToProps = { getBook, logout }
+const mapDispatchToProps = { getBook }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
 

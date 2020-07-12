@@ -9,6 +9,13 @@ const getUser = (param) => {
     payload: http().get(url)
   }
 }
+const patchUser = (id, dataUser) =>{
+  const url = `${ip}books/auth/users/${id}`
+  return {
+    type: 'PATCHUSER',
+    payload: http().patch(url, dataUser)
+  }
+}
 
 const deleteUser = (id) => {
   const url = `${ip}books/auth/users/${id}`
@@ -19,4 +26,4 @@ const deleteUser = (id) => {
   }
 }
 
-export {getUser, deleteUser}
+export {getUser, deleteUser, patchUser}

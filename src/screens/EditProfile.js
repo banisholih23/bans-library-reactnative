@@ -2,20 +2,22 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, Alert, FlatList } from 'react-native';
 
 import { connect } from 'react-redux'
-import { patchAuthor, getAuthor } from '../redux/actions/author'
+import { patchUser, getUser } from '../redux/actions/users'
+import {logout} from '../redux/actions/auth'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 import bg from '../assets/image/bg.jpg';
 
-class Author extends Component {
+class Profile extends Component {
   constructor(props) {
-    console.log('iniprops',props)
+    console.log('ini props',props)
     super(props)
     this.state = {
-      name: '',
-      description: ''
+      username: '',
+      email: '',
+      token: this.props.auth.dataLogin.data.token
     }
   }
 
@@ -32,69 +34,61 @@ class Author extends Component {
           style: 'cancel'
         },
         { text: 'Edit', 
-          onPress: this.editAuthor
+          onPress: this.editUser
       }
       ],
       { cancelable: false }
     )
   }
 
-
-  editAuthor = () => {
-    const dataAuthor = {
-      name: this.state.name,
-      description: this.state.description
+  editUser = () => {
+    const {token} = this.state
+    const dataUser = {
+      username: this.state.username,
+      email: this.state.email,
     }
-    const { name, description } = this.state
-    if (name == "" || description == "") {
+    const { username, email } = this.state
+    if (username == "" || email == "") {
       Alert.alert('Please fill All Column')
     } else {
-      this.props.patchAuthor(`${this.props.route.params.id}`, dataAuthor).then((response) => {
-        Alert.alert('Holaaa!! edit Author Success..')
-        this.fetchData()
-        this.props.navigation.navigate('author')
+      this.props.patchUser(`${this.props.route.params.id}`, dataUser, token).then((response) => {
+        Alert.alert('Holaaa!! Edit Profile Success Pease Login Again')
+        this.logout()
       }).catch(function (error) {
         Alert.alert('Something Wrong!')
       })
     }
   }
 
-  fetchData = () => {
-    this.props.getAuthor()
+  logout = () => {
+    this.props.logout()
+    this.props.navigation.navigate('login')
   }
 
   cancelEdit = () => {
-    this.props.navigation.navigate('author')
-  }
-
-  addAuthor = () => {
-    this.props.navigation.navigate('addAuthor')
-  }
-
-  componentDidMount(){
-    this.fetchData()
+    this.props.navigation.navigate('profile')
   }
 
   render() {
-    const {name, description} = this.props.route.params
+    const {username, email} = this.props.route.params
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
         <View style={style.header}>
-          <Text style={style.text}>Edit Author</Text>
+          <Text style={style.text}>Edit Profile</Text>
         </View>
         <View style={style.form}>
           <TextInput
-          onChangeText={(e) => { this.setState({ name: e }) }} style={style.formInput} placeholder='Name' placeholderTextColor='black'
-          defaultValue={name} />
+          onChangeText={(e) => { this.setState({ username: e }) }} style={style.formInput} placeholder='username' placeholderTextColor='black'
+          defaultValue={username} />
           <TextInput
-          onChangeText={(e) => { this.setState({ description: e }) }} style={style.formInput} placeholder='Description' placeholderTextColor='black'
-          defaultValue={description} />
+          onChangeText={(e) => { this.setState({ email: e }) }} style={style.formInput} placeholder='email' placeholderTextColor='black'
+          defaultValue={email} />
         </View>
         <View style={style.line} />
         <View style={style.addBtnWrapper}>
           <TouchableOpacity onPress={this.toggleEdit} style={style.addBtn}>
-            <Text style={style.addBtntext}>Edit AUTHOR</Text>
+            <Text style={style.addBtntext}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.cancelEdit} style={style.addBtnCancel}>
             <Text style={style.addBtntext}>CANCEL</Text>
@@ -105,9 +99,13 @@ class Author extends Component {
   }
 }
 
-const mapDispatchToProps = {patchAuthor, getAuthor}
+const mapStateToProps = state => ({
+  auth: state.auth
+})
 
-export default connect(null, mapDispatchToProps)(Author)
+const mapDispatchToProps = {patchUser, getUser, logout}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const style = StyleSheet.create({
   parent: {

@@ -1,15 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Text,
-  TextInput,
-  View,
-  Image,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {Text,TextInput, View, Image, StyleSheet, Dimensions, TouchableOpacity, Alert, KeyboardAvoidingView} from 'react-native';
 
 import { connect } from 'react-redux'
 import { register } from '../redux/actions/auth'

@@ -1,22 +1,75 @@
 import React, { Component } from 'react';
-import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
+import { Text, View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Image, Alert} from 'react-native';
+
+import { connect } from 'react-redux'
+import { patchGenre, getGenre } from '../redux/actions/genre'
 
 const deviceWidth = Dimensions.get('screen').width;
 const deviceHeight = Dimensions.get('screen').height;
 
 import bg from '../assets/image/bg.jpg';
 
-class Author extends Component {
+class Genre extends Component {
+  constructor(props) {
+    console.log('iniprops',props)
+    super(props)
+    this.state = {
+      name: '',
+    }
+  }
+
+  toggleEdit = () => {
+    Alert.alert(
+      'Are you sure?',
+      "Make sure your data is correct",
+      [
+        {
+          text: '',
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        { text: 'Edit', 
+          onPress: this.editGenre
+      }
+      ],
+      { cancelable: false }
+    )
+  }
+
+  editGenre = () => {
+    const dataGenre = {
+      name: this.state.name,
+    }
+    const { name } = this.state
+    if (name == "") {
+      Alert.alert('Please fill All Column')
+    } else {
+      this.props.patchGenre(`${this.props.route.params.id}`, dataGenre).then((response) => {
+        Alert.alert('Holaaa!! edit Genre Success..')
+        this.fetchData()
+        this.props.navigation.navigate('genre')
+      }).catch(function (error) {
+        Alert.alert('Something Wrong!')
+      })
+    }
+  }
+
+  fetchData = () => {
+    this.props.getGenre()
+  }
 
   cancelEdit = () => {
     this.props.navigation.navigate('genre')
   }
 
-  addAuthor = () => {
-    this.props.navigation.navigate('addAuthor')
+  componentDidMount(){
+    this.fetchData()
   }
 
   render() {
+    const { name } = this.props.route.params
     return (
       <View style={style.parent}>
         <Image source={bg} style={style.fill}></Image>
@@ -24,12 +77,16 @@ class Author extends Component {
           <Text style={style.text}>Edit Genre</Text>
         </View>
         <View style={style.form}>
-          <TextInput style={style.formInput} placeholder='Name' placeholderTextColor='black' />
-          <TextInput style={style.formInput} placeholder='Description' placeholderTextColor='black' />
+          <TextInput
+          onChangeText={(e) => { this.setState({ name: e }) }}
+          style={style.formInput} 
+          placeholder='Name' 
+          defaultValue={name}
+          placeholderTextColor='black' />
         </View>
         <View style={style.line} />
         <View style={style.addBtnWrapper}>
-          <TouchableOpacity onPress={this.addAuthor} style={style.addBtn}>
+          <TouchableOpacity onPress={this.toggleEdit} style={style.addBtn}>
             <Text style={style.addBtntext}>Edit Genre</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.cancelEdit} style={style.addBtnCancel}>
@@ -41,7 +98,9 @@ class Author extends Component {
   }
 }
 
-export default Author
+const mapDispatchToProps = {patchGenre, getGenre}
+
+export default connect(null, mapDispatchToProps)(Genre)
 
 const style = StyleSheet.create({
   parent: {
@@ -83,7 +142,7 @@ const style = StyleSheet.create({
     borderRadius: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    color: 'white',
+    color: 'black',
     marginTop: 10
   },
   badgeWarning: {
