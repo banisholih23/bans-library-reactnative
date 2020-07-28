@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import { getBook } from '../redux/actions/book'
 import {logout} from '../redux/actions/auth'
 import bg from '../assets/image/bg.jpg';
+import {API} from 'react-native-dotenv'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
-const API_URL = 'http://192.168.1.16:5000/'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -116,7 +116,7 @@ class Dashboard extends Component {
                 <View style={dashboardStyle.item}>
                   <Image
                     style={dashboardStyle.imageContainer}
-                    source={{ uri: `${API_URL}${item.image}` }}
+                    source={{ uri: `${API}${item.image}` }}
                   />
                 </View>
               </TouchableOpacity>
@@ -131,7 +131,7 @@ class Dashboard extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('detail', { item })}>
               <View style={homeStyle.item}>
                 <View style={homeStyle.pictureWrapper}>
-                  <Image style={homeStyle.picture} source={{ uri: `${API_URL}${item.image}` }} />
+                  <Image style={homeStyle.picture} source={{ uri: `${API}${item.image}` }} />
                   <Text style={homeStyle.textName}>{item.book_title}</Text>
                   <Text style={homeStyle.textStatus}>{item.book_status}</Text>
                 </View>

@@ -1,9 +1,9 @@
 import http from '../../services/http'
-import {REACT_APP_URL} from 'react-native-dotenv';
+import {API} from 'react-native-dotenv';
 const ip = 'http://192.168.1.16:5000/'
 
 const getTransactions = (param) => {
-  const url = `${ip}books/transactions?${param}`
+  const url = `${API}books/transactions?${param}`
   console.log(url)
   return {
     type: 'GETTRANSACTIONS',
@@ -12,7 +12,7 @@ const getTransactions = (param) => {
 }
 
 const getTransactionUser = (id) =>{
-  const url = `${ip}books/transactions/user/${id}`
+  const url = `${API}books/transactions/user/${id}`
   return {
     type: 'GETTRANSACTIONBYUSER',
     payload: http().get(url)
@@ -20,7 +20,7 @@ const getTransactionUser = (id) =>{
   }
 
 const postTransactions = (dataPost) => {
-  const url = `${ip}books/transactions`
+  const url = `${API}books/transactions`
   return {
     type: 'POSTTRANSACTIONS',
     payload: http().post(url, dataPost)
@@ -28,7 +28,7 @@ const postTransactions = (dataPost) => {
 }
 
 const returnTransactions = (id) => {
-  const url = `${ip}books/transactions/${id}`
+  const url = `${API}books/transactions/${id}`
   return {
     type: 'RETURNTRANSACTIONS',
     payload: http().delete(url)

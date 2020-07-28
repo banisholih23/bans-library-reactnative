@@ -18,6 +18,7 @@ import cover from '../assets/image/sangpemimpi.jpg'
 import { connect } from 'react-redux'
 import { postTransactions } from '../redux/actions/transactions'
 import { getBook } from '../redux/actions/book'
+import {API} from 'react-native-dotenv'
 
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight = Dimensions.get('window').height;
@@ -74,8 +75,7 @@ class Details extends Component {
 
   render() {
     const { book_title, book_author, book_genre, book_status, book_desc, image} = this.props.route.params.item
-    const API_URL = 'http://192.168.1.16:5000/'
-    console.log(`ini url image... ${API_URL}${image}`)
+    // console.log(`ini url image... ${API_URL}${image}`)
     return (
       <KeyboardAvoidingView behavior={'position'} style={detailStyle.parent}>
         <Image source={bg} style={detailStyle.accent1} />
@@ -85,7 +85,7 @@ class Details extends Component {
         </View>
         <View style={detailStyle.accent2}>
           <View style={detailStyle.container}>
-            <Image source={{ uri : `${API_URL}${image}`}} style={detailStyle.image} />
+            <Image source={{ uri : `${API}${image}`}} style={detailStyle.image} />
             <Text style={detailStyle.text}>{book_title}</Text>
             <Text style={detailStyle.textAuthor}>{book_author}</Text>
             <Text style={detailStyle.text2}>{book_status}</Text>
