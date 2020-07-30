@@ -1,6 +1,6 @@
-# BansLibrary
 <div align="center">
-  <img width="200" src="./src/assets/image/banslibrary.png"/>
+  # BansLibrary
+  <img width="250" src="./src/assets/image/banslibrary.png"/>
   <p ">
     Built with React Native
   </p>
