@@ -27,6 +27,7 @@ Sahabat Setia Mobile is library mobile application that can borrow your favorite
 ## Screenshots
 <div align="center">
     <img width="250" src=".src/assets/image/SS/splash.jpg">
+    <img width="250" src="./src/assets/image/banslibrary.png"/>
     <img width="250" src=".src/assets/image/SS/landing.jpg">
     <img width="250" src=".src/assets/image/SS/login.jpg">
     <img width="250" src=".src/assets/image/SS/home.jpg">
