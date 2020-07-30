@@ -7,7 +7,7 @@
       </div>
 
 ## Introduction
-Sahabat Setia Mobile is library mobile application that can borrow your favorite book, you can search your favotire book in recommendation, category, and all books, you can see detail book, and you can see history of book that being borrowed.
+BansLibrary is library mobile application that can borrow your favorite book, you can search your favotire book in recommendation, category, and all books, you can see detail book, and you can see history of book that being borrowed.
 
 ## Features
 * Users can see books without login
