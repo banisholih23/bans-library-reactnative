@@ -1,5 +1,5 @@
 # BansLibrary
-<img width="150" src="./src/assets/images/banslibrary.png"/>
+<img width="150" src="./src/assets/image/banslibrary.png"/>
 <p ">
   Built with React Native
 </p>
@@ -26,15 +26,15 @@ Sahabat Setia Mobile is library mobile application that can borrow your favorite
 
 ## Screenshots
 <div align="center">
-    <img width="250" src=".src/assets/images/SS/splash.jpg">
-    <img width="250" src=".src/assets/images/SS/landing.jpg">
-    <img width="250" src=".src/assets/images/SS/login.jpg">
-    <img width="250" src=".src/assets/images/SS/home.jpg">
-    <img width="250" src=".src/assets/images/SS/search.jpg">
-    <img width="250" src=".src/assets/images/SS/detail.jpg">
-    <img width="250" src=".src/assets/images/SS/alertBorrow.jpg">
-    <img width="250" src=".src/assets/images/SS/return.jpg">
-    <img width="250" src=".src/assets/images/SS/profile.jpg">
+    <img width="250" src=".src/assets/image/SS/splash.jpg">
+    <img width="250" src=".src/assets/image/SS/landing.jpg">
+    <img width="250" src=".src/assets/image/SS/login.jpg">
+    <img width="250" src=".src/assets/image/SS/home.jpg">
+    <img width="250" src=".src/assets/image/SS/search.jpg">
+    <img width="250" src=".src/assets/image/SS/detail.jpg">
+    <img width="250" src=".src/assets/image/SS/alertBorrow.jpg">
+    <img width="250" src=".src/assets/image/SS/return.jpg">
+    <img width="250" src=".src/assets/image/SS/profile.jpg">
 </div>
 
 ## Related Project (Backend)
