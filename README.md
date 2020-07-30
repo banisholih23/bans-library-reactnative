@@ -2,7 +2,7 @@
 <div align="center">
   <img width="250" src="./src/assets/image/banslibrary.png"/>
   <p ">
-    Built with React Native
+    Build with React Native
   </p>
       </div>
 
