@@ -29,12 +29,12 @@ Sahabat Setia Mobile is library mobile application that can borrow your favorite
     <img width="250" src="./src/assets/image/screenshoot/splash.jpg">
     <img width="250" src="./src/assets/image/screenshoot/landing.jpg">
     <img width="250" src="./src/assets/image/screenshoot/login.jpg">
-    <img width="250" src="./src/assets/image/SS/home.jpg">
-    <img width="250" src="./src/assets/image/SS/search.jpg">
-    <img width="250" src="./src/assets/image/SS/detail.jpg">
-    <img width="250" src="./src/assets/image/SS/alertBorrow.jpg">
-    <img width="250" src="./src/assets/image/SS/return.jpg">
-    <img width="250" src="./src/assets/image/SS/profile.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/home.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/search.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/detail.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/alertBorrow.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/return.jpg">
+    <img width="250" src="./src/assets/image/screenshoot/profile.jpg">
 </div>
 
 ## Related Project (Backend)
